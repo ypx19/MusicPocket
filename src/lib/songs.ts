@@ -113,6 +113,23 @@ export function filterSongs(songs: Song[], query: string): Song[] {
   })
 }
 
+/** Resolve media/library files. Prefer raw GitHub when connected so new imports
+ *  play before Pages finishes redeploying. */
+export function mediaUrl(
+  path: string | undefined | null,
+  creds?: GithubCredentials | null,
+  refOverride?: string | null,
+): string | undefined {
+  if (!path) return undefined
+  if (/^https?:\/\//i.test(path) || path.startsWith('data:')) return path
+  const clean = path.replace(/^\//, '')
+  if (creds?.repo) {
+    const ref = refOverride || creds.ref || 'main'
+    return `https://raw.githubusercontent.com/${creds.repo}/${ref}/public/${clean}`
+  }
+  return assetUrl(clean)
+}
+
 export function findSongById(songs: Song[], id: string | null | undefined): Song | undefined {
   if (!id) return undefined
   return songs.find((s) => s.id === id)

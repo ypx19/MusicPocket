@@ -14,7 +14,11 @@ import { GithubSetup } from './GithubSetup'
 
 type JobPhase = 'idle' | 'dispatching' | 'running' | 'refreshing' | 'done' | 'error'
 
-export function SearchPanel() {
+interface SearchPanelProps {
+  onImportComplete?: () => void | Promise<void>
+}
+
+export function SearchPanel({ onImportComplete }: SearchPanelProps) {
   const [creds, setCreds] = useState<GithubCredentials | null>(() => loadGithubCredentials())
   const [results, setResults] = useState<SearchResults | null>(null)
   const [loading, setLoading] = useState(true)
@@ -332,6 +336,7 @@ export function SearchPanel() {
           creds={creds}
           onClose={() => setSelected(null)}
           onNeedSetup={() => setShowSetup(true)}
+          onImportComplete={onImportComplete}
         />
       ) : null}
     </section>

@@ -1,15 +1,27 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { MusicLibrary } from './components/MusicLibrary'
 import { PlayerBar } from './components/PlayerBar'
 import { LyricsPanel } from './components/LyricsPanel'
 import { SearchPanel } from './components/SearchPanel'
 import { usePersistentPlayer } from './hooks/usePersistentPlayer'
 import { useLyrics } from './hooks/useLyrics'
-import { filterSongs, loadSongsManifest } from './lib/songs'
+import { loadGithubCredentials } from './lib/githubActions'
+import { filterSongs, loadSongsManifest, mediaUrl } from './lib/songs'
 import type { Song } from './types/music'
 import './App.css'
 
 type Tab = 'library' | 'search'
+
+function withPlayableUrls(songs: Song[]): Song[] {
+  const creds = loadGithubCredentials()
+  if (!creds) return songs
+  return songs.map((song) => ({
+    ...song,
+    audioUrl: mediaUrl(song.audioUrl, creds) ?? song.audioUrl,
+    coverUrl: mediaUrl(song.coverUrl, creds),
+    lyricsUrl: mediaUrl(song.lyricsUrl, creds),
+  }))
+}
 
 export default function App() {
   const [songs, setSongs] = useState<Song[]>([])
@@ -23,27 +35,29 @@ export default function App() {
   const lyrics = useLyrics(player.currentSong, player.currentTime)
   const visibleSongs = useMemo(() => filterSongs(songs, filter), [songs, filter])
 
-  useEffect(() => {
-    let cancelled = false
-    async function load() {
-      setLoading(true)
-      setLoadError(null)
-      try {
-        const manifest = await loadSongsManifest()
-        if (!cancelled) setSongs(manifest.songs)
-      } catch (err) {
-        if (!cancelled) {
-          setLoadError(err instanceof Error ? err.message : 'Failed to load library')
-        }
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
-    void load()
-    return () => {
-      cancelled = true
+  const reloadLibrary = useCallback(async () => {
+    setLoading(true)
+    setLoadError(null)
+    try {
+      const creds = loadGithubCredentials()
+      const manifest = await loadSongsManifest(creds)
+      setSongs(withPlayableUrls(manifest.songs))
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : 'Failed to load library')
+    } finally {
+      setLoading(false)
     }
   }, [])
+
+  useEffect(() => {
+    void reloadLibrary()
+  }, [reloadLibrary])
+
+  useEffect(() => {
+    if (tab === 'library') {
+      void reloadLibrary()
+    }
+  }, [tab, reloadLibrary])
 
   useEffect(() => {
     const onOnline = () => setOffline(false)
@@ -95,13 +109,19 @@ export default function App() {
                   currentSongId={player.currentSong?.id ?? null}
                   isPlaying={player.isPlaying}
                   onPlaySong={(song, queue) => player.playSong(song, queue)}
+                  onRefresh={() => void reloadLibrary()}
                 />
                 <LyricsPanel lyrics={lyrics} onSeek={player.seek} />
               </div>
             ) : null}
           </>
         ) : (
-          <SearchPanel />
+          <SearchPanel
+            onImportComplete={async () => {
+              await reloadLibrary()
+              setTab('library')
+            }}
+          />
         )}
       </main>
 

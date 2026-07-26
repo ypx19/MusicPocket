@@ -82,6 +82,14 @@
   margin-bottom: 1rem;
 }
 
+.library-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .library-search input,
 .search-workflow-box input,
 .import-sheet input[type='text'],

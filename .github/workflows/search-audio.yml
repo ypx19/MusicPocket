@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   search:
@@ -94,3 +95,10 @@ jobs:
           done
           echo "[commit] ERROR: could not push after retries (possible conflict)" >&2
           exit 1
+
+      - name: Deploy GitHub Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run "Deploy GitHub Pages" --ref "${{ github.ref_name }}"
+          echo "[deploy] Triggered Deploy GitHub Pages"

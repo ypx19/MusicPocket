@@ -15,11 +15,18 @@ interface ImportStatusProps {
   creds: GithubCredentials | null
   onClose: () => void
   onNeedSetup: () => void
+  onImportComplete?: () => void | Promise<void>
 }
 
 type ImportPhase = 'idle' | 'dispatching' | 'running' | 'done' | 'error'
 
-export function ImportStatus({ candidate, creds, onClose, onNeedSetup }: ImportStatusProps) {
+export function ImportStatus({
+  candidate,
+  creds,
+  onClose,
+  onNeedSetup,
+  onImportComplete,
+}: ImportStatusProps) {
   const [title, setTitle] = useState(candidate.title)
   const [artist, setArtist] = useState(candidate.uploader ?? '')
   const [album, setAlbum] = useState('')
@@ -119,7 +126,10 @@ export function ImportStatus({ candidate, creds, onClose, onNeedSetup }: ImportS
       }
 
       setPhase('done')
-      setStatusText('Import complete. Open Library (refresh if needed) to play the new track.')
+      setStatusText('Import complete. Updating library…')
+      await onImportComplete?.()
+      setStatusText('Import complete. Song is in your library.')
+      onClose()
     } catch (err) {
       setPhase('error')
       setError(err instanceof Error ? err.message : 'Failed to start import')

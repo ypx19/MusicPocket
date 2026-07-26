@@ -9,6 +9,7 @@ interface MusicLibraryProps {
   currentSongId: string | null
   isPlaying: boolean
   onPlaySong: (song: Song, queue: Song[]) => void
+  onRefresh?: () => void
 }
 
 export function MusicLibrary({
@@ -18,6 +19,7 @@ export function MusicLibrary({
   currentSongId,
   isPlaying,
   onPlaySong,
+  onRefresh,
 }: MusicLibraryProps) {
   return (
     <section className="library" aria-label="Music library">
@@ -26,15 +28,22 @@ export function MusicLibrary({
           <h1 className="brand">MusicPocket</h1>
           <p className="subtitle">Your personal audio library</p>
         </div>
-        <label className="library-search">
-          <span className="sr-only">Filter library</span>
-          <input
-            type="search"
-            placeholder="Filter by title or artist…"
-            value={filter}
-            onChange={(e) => onFilterChange(e.target.value)}
-          />
-        </label>
+        <div className="library-header-actions">
+          {onRefresh ? (
+            <button type="button" className="ghost-btn" onClick={onRefresh}>
+              Refresh
+            </button>
+          ) : null}
+          <label className="library-search">
+            <span className="sr-only">Filter library</span>
+            <input
+              type="search"
+              placeholder="Filter by title or artist…"
+              value={filter}
+              onChange={(e) => onFilterChange(e.target.value)}
+            />
+          </label>
+        </div>
       </header>
 
       {songs.length === 0 ? (

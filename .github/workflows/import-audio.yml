@@ -38,6 +38,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   import:
@@ -132,3 +133,11 @@ jobs:
           done
           echo "[commit] ERROR: GitHub Actions permission failure or push rejected" >&2
           exit 1
+
+      # GITHUB_TOKEN pushes do not trigger other workflows — dispatch deploy explicitly.
+      - name: Deploy GitHub Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run "Deploy GitHub Pages" --ref "${{ github.ref_name }}"
+          echo "[deploy] Triggered Deploy GitHub Pages"
