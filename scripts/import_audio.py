@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import shutil
 import subprocess
 import tempfile
@@ -24,10 +23,10 @@ from utils import (
     validate_https_url,
     write_json,
 )
-from ytdlp_args import ytdlp_base_args
+from ytdlp_args import ytdlp_base_args, ytdlp_retry_args
 
 
-def run(cmd: list[str], stage: str) -> subprocess.CompletedProcess[str]:
+def run(cmd: list[str], stage: str, *, allow_fail: bool = False) -> subprocess.CompletedProcess[str]:
     log(stage, " ".join(cmd))
     try:
         completed = subprocess.run(cmd, check=False, capture_output=True, text=True)
@@ -35,6 +34,9 @@ def run(cmd: list[str], stage: str) -> subprocess.CompletedProcess[str]:
         fail(stage, f"Command not found: {cmd[0]}")
     if completed.returncode != 0:
         err = (completed.stderr or completed.stdout or "").strip()
+        if allow_fail:
+            log(stage, f"Command failed (will retry if possible): {err[:500]}")
+            return completed
         if "Sign in to confirm" in err or "not a bot" in err.lower():
             fail(
                 stage,
@@ -81,11 +83,71 @@ def extract_metadata(url: str) -> dict:
             url,
         ],
         "metadata",
+        allow_fail=True,
     )
+    if completed.returncode != 0 or not completed.stdout.strip():
+        log("metadata", "Could not fully extract metadata; continuing with provided title/artist")
+        return {"extractor": "youtube"}
     try:
         return json.loads(completed.stdout.splitlines()[0])
     except (json.JSONDecodeError, IndexError):
-        fail("metadata", "Unable to parse yt-dlp metadata JSON")
+        log("metadata", "Unable to parse yt-dlp metadata JSON; continuing")
+        return {"extractor": "youtube"}
+
+
+def find_downloaded_media(tmp_dir: Path) -> list[Path]:
+    downloads = list(tmp_dir.glob("download.*"))
+    return [
+        p
+        for p in downloads
+        if p.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp", ".json", ".vtt", ".srt", ".temp"}
+    ]
+
+
+def download_media(source_url: str, outtmpl: str, tmp_dir: Path) -> Path:
+    log("download", "Downloading selected media with yt-dlp")
+    run(
+        [
+            "yt-dlp",
+            *ytdlp_base_args(for_download=True),
+            "-o",
+            outtmpl,
+            "--write-thumbnail",
+            "--convert-thumbnails",
+            "jpg",
+            source_url,
+        ],
+        "download",
+        allow_fail=True,
+    )
+    media_files = find_downloaded_media(tmp_dir)
+    if media_files:
+        return media_files[0]
+
+    log("download", "First attempt produced no audio; retrying with alternate YouTube clients")
+    run(
+        [
+            "yt-dlp",
+            *ytdlp_retry_args(),
+            "-o",
+            outtmpl,
+            "--write-thumbnail",
+            "--convert-thumbnails",
+            "jpg",
+            source_url,
+        ],
+        "download",
+        allow_fail=True,
+    )
+    media_files = find_downloaded_media(tmp_dir)
+    if media_files:
+        return media_files[0]
+
+    fail(
+        "download",
+        "No audio formats available from YouTube. Re-export fresh cookies while logged into "
+        "youtube.com, update the YTDLP_COOKIES secret, and retry.",
+    )
 
 
 def main() -> int:
@@ -139,67 +201,7 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="musicpocket-") as tmp:
         tmp_dir = Path(tmp)
         outtmpl = str(tmp_dir / "download.%(ext)s")
-        log("download", "Downloading selected media with yt-dlp")
-        run(
-            [
-                "yt-dlp",
-                *ytdlp_base_args(),
-                "-f",
-                "bestaudio/best",
-                "-o",
-                outtmpl,
-                "--write-thumbnail",
-                "--convert-thumbnails",
-                "jpg",
-                source_url,
-            ],
-            "download",
-        )
-
-        downloads = list(tmp_dir.glob("download.*"))
-        media_files = [
-            p
-            for p in downloads
-            if p.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp", ".json", ".vtt", ".srt"}
-        ]
-        if not media_files:
-            # Retry with a broader client set if the first attempt only got images.
-            log("download", "No audio media found; retrying with alternate YouTube clients")
-            run(
-                [
-                    "yt-dlp",
-                    "--js-runtimes",
-                    "deno",
-                    "--remote-components",
-                    "ejs:github",
-                    "--extractor-args",
-                    "youtube:player_client=ios,tv_embedded,mweb,android",
-                    "--no-playlist",
-                    *(
-                        ["--cookies", os.environ["YTDLP_COOKIES_FILE"]]
-                        if os.environ.get("YTDLP_COOKIES_FILE")
-                        else []
-                    ),
-                    "-f",
-                    "bestaudio/best/bestaudio*",
-                    "-o",
-                    outtmpl,
-                    "--write-thumbnail",
-                    "--convert-thumbnails",
-                    "jpg",
-                    source_url,
-                ],
-                "download",
-            )
-            downloads = list(tmp_dir.glob("download.*"))
-            media_files = [
-                p
-                for p in downloads
-                if p.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp", ".json", ".vtt", ".srt"}
-            ]
-        if not media_files:
-            fail("download", "No media file downloaded (YouTube returned no audio formats)")
-        media = media_files[0]
+        media = download_media(source_url, outtmpl, tmp_dir)
         log("download", f"Got {media.name}")
 
         log("ffmpeg", "Converting to MP3")
