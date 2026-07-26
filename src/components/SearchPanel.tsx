@@ -31,7 +31,8 @@ export function SearchPanel() {
     setLoading(true)
     setError(null)
     try {
-      const data = await loadSearchResults()
+      const active = creds ?? loadGithubCredentials()
+      const data = await loadSearchResults(active)
       setResults(data)
       if (!opts?.preserveQuery) {
         setQueryDraft((q) => q || data.query || '')
@@ -43,7 +44,7 @@ export function SearchPanel() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [creds])
 
   useEffect(() => {
     void refresh()
@@ -112,31 +113,42 @@ export function SearchPanel() {
       }
 
       setPhase('refreshing')
-      setStatusText('Search finished — loading candidates…')
+      setStatusText('Search finished — loading candidates from the repository…')
 
-      // Pages/CDN can lag a few seconds after the commit lands
+      // Prefer GitHub Contents/raw (immediate) over Pages CDN (often minutes behind).
       let latest: SearchResults | null = null
-      for (let attempt = 0; attempt < 12; attempt += 1) {
-        latest = await loadSearchResults()
+      for (let attempt = 0; attempt < 10; attempt += 1) {
+        latest = await loadSearchResults(active)
         const updated =
           latest.query === query &&
-          latest.searchedAt &&
+          Boolean(latest.searchedAt) &&
           latest.searchedAt !== previousSearchedAt &&
-          Date.parse(latest.searchedAt) >= Date.parse(startedAt) - 60_000
+          Date.parse(latest.searchedAt!) >= Date.parse(startedAt) - 60_000
         if (updated) break
-        await new Promise((r) => window.setTimeout(r, 2500))
+        await new Promise((r) => window.setTimeout(r, 1500))
       }
 
       if (latest) {
         setResults(latest)
         setQueryDraft(latest.query || query)
       }
+
+      const matched =
+        latest &&
+        latest.query === query &&
+        Boolean(latest.searchedAt) &&
+        latest.searchedAt !== previousSearchedAt
+
       setPhase('done')
-      setStatusText(
-        latest?.candidates.length
-          ? `Found ${latest.candidates.length} candidates.`
-          : 'Workflow finished, but no candidates were returned.',
-      )
+      if (!matched || !latest) {
+        setStatusText(
+          'Workflow finished, but fresh results are not visible yet. Try Refresh results in a few seconds.',
+        )
+      } else if (latest.candidates.length === 0) {
+        setStatusText(`No candidates for “${query}”.`)
+      } else {
+        setStatusText(`Found ${latest.candidates.length} candidates.`)
+      }
     } catch (err) {
       setPhase('error')
       setError(err instanceof Error ? err.message : 'Failed to start search')

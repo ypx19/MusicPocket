@@ -51,7 +51,7 @@ export function ImportStatus({ candidate, creds, onClose, onNeedSetup }: ImportS
     setPhase('dispatching')
     setStatusText('Starting Import Authorized Audio…')
     const startedAt = new Date().toISOString()
-    const beforeCount = (await loadSongsManifest().catch(() => null))?.songs.length ?? 0
+    const beforeCount = (await loadSongsManifest(active).catch(() => null))?.songs.length ?? 0
 
     try {
       await dispatchWorkflow(active, {
@@ -92,13 +92,13 @@ export function ImportStatus({ candidate, creds, onClose, onNeedSetup }: ImportS
         return
       }
 
-      // Wait briefly for Pages/manifest to update
-      for (let i = 0; i < 10; i += 1) {
-        const manifest = await loadSongsManifest().catch(() => null)
+      // Prefer repository contents over Pages CDN.
+      for (let i = 0; i < 12; i += 1) {
+        const manifest = await loadSongsManifest(active).catch(() => null)
         const found = manifest?.songs.some((s) => s.sourceUrl === candidate.webpageUrl)
         const grew = (manifest?.songs.length ?? 0) > beforeCount
         if (found || grew) break
-        await new Promise((r) => window.setTimeout(r, 2500))
+        await new Promise((r) => window.setTimeout(r, 1500))
       }
 
       setPhase('done')

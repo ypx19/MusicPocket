@@ -1,4 +1,5 @@
 import type { Song, SongsManifest, SearchResults } from '../types/music'
+import type { GithubCredentials } from './githubActions'
 
 /** Resolve asset URLs relative to the Vite base (GitHub Pages subpath safe). */
 export function assetUrl(path: string | undefined | null): string | undefined {
@@ -10,36 +11,87 @@ export function assetUrl(path: string | undefined | null): string | undefined {
   return `${normalizedBase}${normalizedPath}`
 }
 
-export async function loadSongsManifest(): Promise<SongsManifest> {
+async function fetchJson<T>(url: string): Promise<T> {
+  const response = await fetch(url, { cache: 'no-cache' })
+  if (!response.ok) {
+    throw new Error(`Failed to load ${url} (${response.status})`)
+  }
+  return (await response.json()) as T
+}
+
+/** Read a public/ file from GitHub immediately after Actions commits (Pages CDN lags). */
+export async function loadRepoPublicJson<T>(
+  pathFromPublic: string,
+  creds?: GithubCredentials | null,
+): Promise<T> {
+  const clean = pathFromPublic.replace(/^\//, '')
+
+  if (creds) {
+    const [owner, repo] = creds.repo.split('/')
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/public/${clean}?ref=${encodeURIComponent(creds.ref || 'main')}`
+    const response = await fetch(apiUrl, {
+      cache: 'no-cache',
+      headers: {
+        Accept: 'application/vnd.github.raw+json',
+        Authorization: `Bearer ${creds.token}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    })
+    if (response.ok) {
+      return (await response.json()) as T
+    }
+  }
+
+  // Public raw URL — available as soon as the commit is on the branch
+  if (creds?.repo) {
+    const ref = creds.ref || 'main'
+    const rawUrl = `https://raw.githubusercontent.com/${creds.repo}/${ref}/public/${clean}?t=${Date.now()}`
+    return fetchJson<T>(rawUrl)
+  }
+
+  throw new Error(`Unable to load ${clean} from repository`)
+}
+
+export async function loadSongsManifest(creds?: GithubCredentials | null): Promise<SongsManifest> {
+  if (creds) {
+    try {
+      const data = await loadRepoPublicJson<SongsManifest>('data/songs.json', creds)
+      if (!data || !Array.isArray(data.songs)) {
+        throw new Error('Invalid songs manifest')
+      }
+      return data
+    } catch {
+      // Fall through to Pages copy
+    }
+  }
+
   const url = assetUrl('data/songs.json')
   if (!url) {
     throw new Error('Unable to resolve songs manifest URL')
   }
 
-  const response = await fetch(url, { cache: 'no-cache' })
-  if (!response.ok) {
-    throw new Error(`Failed to load library (${response.status})`)
-  }
-
-  const data = (await response.json()) as SongsManifest
+  const data = await fetchJson<SongsManifest>(`${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`)
   if (!data || !Array.isArray(data.songs)) {
     throw new Error('Invalid songs manifest')
   }
   return data
 }
 
-export async function loadSearchResults(): Promise<SearchResults> {
+export async function loadSearchResults(creds?: GithubCredentials | null): Promise<SearchResults> {
+  if (creds) {
+    try {
+      return await loadRepoPublicJson<SearchResults>('data/search/latest.json', creds)
+    } catch {
+      // Fall through to Pages copy
+    }
+  }
+
   const url = assetUrl('data/search/latest.json')
   if (!url) {
     throw new Error('Unable to resolve search results URL')
   }
 
-  const response = await fetch(url, { cache: 'no-cache' })
-  if (!response.ok) {
-    throw new Error(`Failed to load search results (${response.status})`)
-  }
-
-  return (await response.json()) as SearchResults
+  return fetchJson<SearchResults>(`${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`)
 }
 
 export function filterSongs(songs: Song[], query: string): Song[] {
