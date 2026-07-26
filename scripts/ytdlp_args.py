@@ -15,12 +15,18 @@ def cookies_file() -> str | None:
     return None
 
 
+def cookies_from_browser() -> str | None:
+    browser = os.environ.get("YTDLP_COOKIES_FROM_BROWSER", "").strip()
+    return browser or None
+
+
 def ytdlp_base_args(*, for_download: bool = False) -> list[str]:
     """Common yt-dlp flags for GitHub Actions / YouTube extraction.
 
-    Android/iOS clients do not support cookies. When cookies are present we must
-    use cookie-capable web clients; otherwise Android is preferred on CI IPs.
+    Prefer --cookies-from-browser for local imports. On Actions, use a Netscape
+    cookies file from YTDLP_COOKIES_B64. Android/iOS clients do not support cookies.
     """
+    browser = cookies_from_browser()
     cookies = cookies_file()
     args = [
         "--js-runtimes",
@@ -30,28 +36,36 @@ def ytdlp_base_args(*, for_download: bool = False) -> list[str]:
         "--no-playlist",
     ]
 
-    if cookies:
+    if browser:
+        log("ytdlp", f"Using cookies from browser: {browser}")
+        args.extend(
+            [
+                "--cookies-from-browser",
+                browser,
+                "--extractor-args",
+                "youtube:player_client=web,mweb",
+            ]
+        )
+    elif cookies:
         log("ytdlp", f"Using cookies file {cookies}")
-        # web / mweb / tv_embedded support cookies; android does not.
         args.extend(
             [
                 "--extractor-args",
-                "youtube:player_client=web,mweb,tv_embedded",
+                "youtube:player_client=web,mweb",
                 "--cookies",
                 cookies,
             ]
         )
     else:
-        log("ytdlp", "No YTDLP_COOKIES_FILE set — using anonymous mobile clients")
+        log("ytdlp", "No cookies configured — using anonymous mobile clients")
         args.extend(
             [
                 "--extractor-args",
-                "youtube:player_client=android,ios,tv_embedded;player_skip=webpage",
+                "youtube:player_client=android,ios;player_skip=webpage",
             ]
         )
 
     if for_download:
-        # Prefer audio; fall back broadly if bestaudio is missing.
         args.extend(["-f", "bestaudio/bestaudio*/best/best*"])
 
     return args
@@ -59,6 +73,7 @@ def ytdlp_base_args(*, for_download: bool = False) -> list[str]:
 
 def ytdlp_retry_args() -> list[str]:
     """Alternate client set used after a failed download attempt."""
+    browser = cookies_from_browser()
     cookies = cookies_file()
     args = [
         "--js-runtimes",
@@ -68,21 +83,11 @@ def ytdlp_retry_args() -> list[str]:
         "--no-playlist",
         "-f",
         "bestaudio/bestaudio*/best/best*",
+        "--extractor-args",
+        "youtube:player_client=web_safari,web,mweb",
     ]
-    if cookies:
-        args.extend(
-            [
-                "--extractor-args",
-                "youtube:player_client=web_safari,web,tv,tv_embedded,mweb",
-                "--cookies",
-                cookies,
-            ]
-        )
-    else:
-        args.extend(
-            [
-                "--extractor-args",
-                "youtube:player_client=ios,tv_embedded,mweb",
-            ]
-        )
+    if browser:
+        args.extend(["--cookies-from-browser", browser])
+    elif cookies:
+        args.extend(["--cookies", cookies])
     return args
