@@ -1,0 +1,111 @@
+name: Import Authorized Audio
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_url:
+        description: HTTPS source URL of the selected authorized media
+        required: true
+        type: string
+      display_title:
+        description: Display title
+        required: true
+        type: string
+      artist:
+        description: Artist name
+        required: true
+        type: string
+      album:
+        description: Album (optional)
+        required: false
+        type: string
+        default: ""
+      license:
+        description: License information (optional)
+        required: false
+        type: string
+        default: ""
+      attribution:
+        description: Attribution text (optional)
+        required: false
+        type: string
+        default: ""
+      confirm_rights:
+        description: I own this content or have permission to download and store it
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Reject without rights confirmation
+        if: ${{ inputs.confirm_rights != true }}
+        run: |
+          echo "[rights] ERROR: Import rejected. confirm_rights must be true." >&2
+          echo "[rights] Affirm that you own the content or have permission to download and store it." >&2
+          exit 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Import authorized audio
+        env:
+          SOURCE_URL: ${{ inputs.source_url }}
+          TITLE: ${{ inputs.display_title }}
+          ARTIST: ${{ inputs.artist }}
+          ALBUM: ${{ inputs.album }}
+          LICENSE: ${{ inputs.license }}
+          ATTRIBUTION: ${{ inputs.attribution }}
+        run: |
+          python scripts/import_audio.py \
+            --source-url "$SOURCE_URL" \
+            --title "$TITLE" \
+            --artist "$ARTIST" \
+            --album "$ALBUM" \
+            --license "$LICENSE" \
+            --attribution "$ATTRIBUTION" \
+            --confirm-rights true
+
+      - name: Commit imported library assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/music public/covers public/lyrics public/data
+          if git diff --staged --quiet; then
+            echo "[commit] No changes to commit"
+            exit 0
+          fi
+          git commit -m "feat: import authorized audio \"${{ inputs.display_title }}\""
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "[commit] Pushed successfully"
+              exit 0
+            fi
+            echo "[commit] Push failed (attempt $attempt); rebasing..."
+            git pull --rebase origin "${{ github.ref_name }}" || {
+              echo "[commit] ERROR: rebase/conflict while pushing import" >&2
+              exit 1
+            }
+          done
+          echo "[commit] ERROR: GitHub Actions permission failure or push rejected" >&2
+          exit 1

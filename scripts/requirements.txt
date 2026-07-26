@@ -1,0 +1,2 @@
+# Python deps for GitHub Actions import/search jobs
+yt-dlp>=2024.8.0

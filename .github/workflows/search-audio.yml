@@ -1,0 +1,79 @@
+name: Search Authorized Audio
+
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: Fuzzy keyword (title, artist, or description)
+        required: true
+        type: string
+      max_results:
+        description: Maximum candidate results
+        required: false
+        type: string
+        default: "8"
+
+permissions:
+  contents: write
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Validate inputs
+        env:
+          QUERY: ${{ inputs.query }}
+          MAX_RESULTS: ${{ inputs.max_results }}
+        run: |
+          if [ -z "$QUERY" ]; then
+            echo "[validate] ERROR: query is empty" >&2
+            exit 1
+          fi
+          case "$MAX_RESULTS" in
+            ''|*[!0-9]*) echo "[validate] ERROR: max_results must be a number" >&2; exit 1 ;;
+          esac
+          if [ "$MAX_RESULTS" -lt 1 ] || [ "$MAX_RESULTS" -gt 25 ]; then
+            echo "[validate] ERROR: max_results must be 1–25" >&2
+            exit 1
+          fi
+
+      - name: Run fuzzy search (no download)
+        env:
+          QUERY: ${{ inputs.query }}
+          MAX_RESULTS: ${{ inputs.max_results }}
+        run: |
+          python scripts/search_audio.py --query "$QUERY" --max-results "$MAX_RESULTS"
+
+      - name: Commit search results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/search/latest.json
+          if git diff --staged --quiet; then
+            echo "[commit] No changes to commit"
+            exit 0
+          fi
+          git commit -m "chore: update search results for \"${{ inputs.query }}\""
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "[commit] Pushed successfully"
+              exit 0
+            fi
+            echo "[commit] Push failed (attempt $attempt); rebasing..."
+            git pull --rebase origin "${{ github.ref_name }}" || exit 1
+          done
+          echo "[commit] ERROR: could not push after retries (possible conflict)" >&2
+          exit 1

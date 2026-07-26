@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-26T00:00:00.000Z",
+  "songs": [
+    {
+      "id": "sample-aurora",
+      "title": "Sample Aurora",
+      "artist": "MusicPocket Demo",
+      "album": "MVP Samples",
+      "duration": 12,
+      "audioUrl": "music/sample-aurora.mp3",
+      "coverUrl": "covers/sample-aurora.jpg",
+      "lyricsUrl": "lyrics/sample-aurora.lrc",
+      "sourceUrl": "https://ffmpeg.org/",
+      "sourceName": "Generated sample",
+      "license": "CC0 — synthetic demo tone generated with FFmpeg",
+      "importedAt": "2026-07-26T00:00:00.000Z"
+    },
+    {
+      "id": "sample-ember",
+      "title": "Sample Ember",
+      "artist": "MusicPocket Demo",
+      "album": "MVP Samples",
+      "duration": 10,
+      "audioUrl": "music/sample-ember.mp3",
+      "coverUrl": "covers/sample-ember.jpg",
+      "lyricsUrl": "lyrics/sample-ember.lrc",
+      "sourceUrl": "https://ffmpeg.org/",
+      "sourceName": "Generated sample",
+      "license": "CC0 — synthetic demo tone generated with FFmpeg",
+      "importedAt": "2026-07-26T00:00:00.000Z"
+    }
+  ]
+}
