@@ -21,6 +21,26 @@ function suggestDisplayTitle(raw: string): string {
   return cleaned || raw
 }
 
+function shellQuote(value: string): string {
+  if (value === '') return "''"
+  if (/^[A-Za-z0-9_./:@%+=,-]+$/.test(value)) return value
+  return `'${value.replace(/'/g, `'\\''`)}'`
+}
+
+function buildLocalImportCommand(sourceUrl: string, title: string, artist: string, album: string): string {
+  const parts = [
+    'scripts/import_local.sh',
+    shellQuote(sourceUrl),
+    shellQuote(title.trim() || 'Untitled'),
+    shellQuote(artist.trim() || 'Unknown'),
+  ]
+  if (album.trim()) parts.push(shellQuote(album.trim()))
+  return [
+    parts.join(' '),
+    "git add public && git commit -m 'feat: import authorized audio' && git push",
+  ].join('\n')
+}
+
 interface ImportStatusProps {
   candidate: SearchCandidate
   creds: GithubCredentials | null
@@ -47,12 +67,34 @@ export function ImportStatus({
   const [statusText, setStatusText] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [runUrl, setRunUrl] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+  const [showCloud, setShowCloud] = useState(false)
 
   const busy = phase === 'dispatching' || phase === 'running'
-  const titleHint = useMemo(() => {
-    const suggested = suggestDisplayTitle(candidate.title)
-    return suggested !== candidate.title ? `Suggested clean title: ${suggested}` : null
-  }, [candidate.title])
+  const localCommand = useMemo(
+    () => buildLocalImportCommand(candidate.webpageUrl, title, artist, album),
+    [candidate.webpageUrl, title, artist, album],
+  )
+
+  async function copyLocalCommand() {
+    if (!confirmed) {
+      setError('Rights confirmation is required before import.')
+      return
+    }
+    if (!title.trim() || !artist.trim()) {
+      setError('Title and artist are required.')
+      return
+    }
+    setError(null)
+    try {
+      await navigator.clipboard.writeText(localCommand)
+      setCopied(true)
+      setStatusText('Command copied. Paste it in your Mac terminal (repo root).')
+      window.setTimeout(() => setCopied(false), 2500)
+    } catch {
+      setError('Clipboard unavailable — select the command and copy manually.')
+    }
+  }
 
   async function runImport() {
     if (!confirmed) {
@@ -117,7 +159,7 @@ export function ImportStatus({
           [
             `Import workflow ${run.conclusion ?? 'failed'}.`,
             hint,
-            'YouTube often blocks GitHub runners. Add a YTDLP_COOKIES secret (Netscape cookies.txt) in the repo, then retry.',
+            'YouTube often blocks GitHub runners. Prefer the local command above.',
           ]
             .filter(Boolean)
             .join(' '),
@@ -163,8 +205,8 @@ export function ImportStatus({
         </header>
 
         <p className="muted">
-          Confirm you have the right to download and store this audio. Import starts the GitHub Actions
-          workflow from this page.
+          Recommended: run the local command on your Mac (uses your browser YouTube login). GitHub Actions
+          imports are often blocked by YouTube.
         </p>
 
         <dl className="import-summary">
@@ -186,8 +228,7 @@ export function ImportStatus({
           Display title
           <input value={title} onChange={(e) => setTitle(e.target.value)} disabled={busy} />
         </label>
-        {titleHint ? <p className="muted small">{titleHint}</p> : null}
-        <p className="muted small">Clean titles (e.g. 可以了) match lyrics providers more reliably than full YouTube titles.</p>
+        <p className="muted small">Clean titles (e.g. 红尘客栈) match lyrics providers more reliably.</p>
         <label>
           Artist
           <input value={artist} onChange={(e) => setArtist(e.target.value)} disabled={busy} />
@@ -195,15 +236,6 @@ export function ImportStatus({
         <label>
           Album (optional)
           <input value={album} onChange={(e) => setAlbum(e.target.value)} disabled={busy} />
-        </label>
-        <label>
-          License (optional)
-          <input
-            value={license}
-            onChange={(e) => setLicense(e.target.value)}
-            placeholder="e.g. CC BY 4.0"
-            disabled={busy}
-          />
         </label>
 
         <label className="checkbox-row">
@@ -215,6 +247,67 @@ export function ImportStatus({
           />
           <span>I own this content or have permission to download and store it.</span>
         </label>
+
+        <div className="import-copy">
+          <p className="muted small">Local import (recommended)</p>
+          <pre>{localCommand}</pre>
+          <div className="search-card-actions">
+            <button
+              type="button"
+              className="primary-btn"
+              disabled={!confirmed || !title.trim() || !artist.trim()}
+              onClick={() => void copyLocalCommand()}
+            >
+              {copied ? 'Copied' : 'Copy local command'}
+            </button>
+          </div>
+          <p className="muted small">
+            Run from the MusicPocket repo root. Safari users: prefix with{' '}
+            <code>YTDLP_COOKIES_FROM_BROWSER=safari</code>.
+          </p>
+        </div>
+
+        <button type="button" className="ghost-btn" onClick={() => setShowCloud((v) => !v)}>
+          {showCloud ? 'Hide cloud import' : 'Advanced: GitHub Actions import'}
+        </button>
+
+        {showCloud ? (
+          <div className="cloud-import">
+            <p className="muted small">
+              Cloud import often fails on YouTube bot-checks. Prefer local import unless you have a
+              self-hosted runner.
+            </p>
+            <label>
+              License (optional)
+              <input
+                value={license}
+                onChange={(e) => setLicense(e.target.value)}
+                placeholder="e.g. CC BY 4.0"
+                disabled={busy}
+              />
+            </label>
+            <div className="search-card-actions">
+              <button
+                type="button"
+                className="ghost-btn"
+                disabled={!confirmed || busy || phase === 'done'}
+                onClick={() => void runImport()}
+              >
+                {busy ? 'Importing…' : phase === 'done' ? 'Imported' : 'Run Actions import'}
+              </button>
+              {creds ? (
+                <a
+                  className="ghost-btn link-btn"
+                  href={actionsWorkflowUrl(creds.repo, 'import-audio.yml')}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View workflow
+                </a>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
 
         {error ? <p className="error-text">{error}</p> : null}
         {statusText ? (
@@ -231,27 +324,6 @@ export function ImportStatus({
             ) : null}
           </p>
         ) : null}
-
-        <div className="search-card-actions">
-          <button
-            type="button"
-            className="primary-btn"
-            disabled={!confirmed || busy || phase === 'done'}
-            onClick={() => void runImport()}
-          >
-            {busy ? 'Importing…' : phase === 'done' ? 'Imported' : 'Import now'}
-          </button>
-          {creds ? (
-            <a
-              className="ghost-btn link-btn"
-              href={actionsWorkflowUrl(creds.repo, 'import-audio.yml')}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View workflow
-            </a>
-          ) : null}
-        </div>
       </div>
     </div>
   )

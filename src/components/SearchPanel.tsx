@@ -219,8 +219,8 @@ export function SearchPanel({ onImportComplete }: SearchPanelProps) {
         <div>
           <h2>Find authorized audio</h2>
           <p className="muted">
-            Type a keyword and search from here. This page starts the GitHub Actions search workflow
-            (no download), then loads the candidate list automatically.
+            Search runs in GitHub Actions (no download). Pick a candidate, then copy the local import
+            command — that uses your Mac browser login and is the reliable path.
           </p>
         </div>
         <div className="section-header-actions">

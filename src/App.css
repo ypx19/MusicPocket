@@ -540,11 +540,16 @@
   grid-template-columns: none !important;
 }
 
-.import-copy pre {
-  margin: 0.35rem 0 0;
-  padding: 0.7rem;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.35);
-  overflow: auto;
-  font-size: 0.8rem;
+.cloud-import {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 248, 240, 0.08);
+}
+
+.import-copy code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
 }
