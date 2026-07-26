@@ -78,6 +78,18 @@ You do **not** need to open the Actions UI for normal search/import. Optional �
 2. Confirm rights, edit title/artist if needed
 3. Press **Import now** — the page starts **Import Authorized Audio** and waits for completion
 
+### YouTube bot-checks (required for most imports)
+
+GitHub-hosted runners are often blocked by YouTube (“Sign in to confirm you’re not a bot”).
+
+1. Export cookies for youtube.com as a Netscape `cookies.txt` (only for accounts/content you are allowed to access).
+2. Repo **Settings → Secrets and variables → Actions → New repository secret**
+3. Name: `YTDLP_COOKIES`
+4. Value: the full cookies.txt contents
+5. Re-run import
+
+Do not commit cookies into the repository. Rotate/delete the secret if it leaks.
+
 ### Manual Actions UI (fallback)
 
 You can still run the workflows from the Actions tab if you prefer.

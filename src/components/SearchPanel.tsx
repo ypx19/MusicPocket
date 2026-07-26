@@ -77,6 +77,7 @@ export function SearchPanel() {
     setStatusText('Starting Search Authorized Audio…')
     const startedAt = new Date().toISOString()
     const previousSearchedAt = results?.searchedAt ?? null
+    let resolvedEarly = false
 
     try {
       await dispatchWorkflow(active, {
@@ -88,10 +89,41 @@ export function SearchPanel() {
       })
 
       setPhase('running')
-      setStatusText('Workflow queued — waiting for search to finish…')
+      setStatusText('Workflow queued — watching for results…')
 
-      const run = await waitForLatestWorkflowRun(active, 'search-audio.yml', startedAt, {
+      const isFresh = (latest: SearchResults | null | undefined) =>
+        Boolean(
+          latest &&
+            latest.query === query &&
+            latest.searchedAt &&
+            latest.searchedAt !== previousSearchedAt &&
+            Date.parse(latest.searchedAt) >= Date.parse(startedAt) - 60_000,
+        )
+
+      // Poll GitHub for latest.json in parallel so results appear as soon as the
+      // commit lands — even before our workflow-status poll notices completion.
+      const resultsPromise = (async () => {
+        for (let attempt = 0; attempt < 90; attempt += 1) {
+          if (resolvedEarly) return null
+          try {
+            const latest = await loadSearchResults(active)
+            if (isFresh(latest)) {
+              resolvedEarly = true
+              return latest
+            }
+          } catch {
+            // keep polling
+          }
+          await new Promise((r) => window.setTimeout(r, 1000))
+        }
+        return null
+      })()
+
+      const runPromise = waitForLatestWorkflowRun(active, 'search-audio.yml', startedAt, {
+        pollMs: 1500,
+        shouldCancel: () => resolvedEarly,
         onUpdate: (summary) => {
+          if (resolvedEarly) return
           if (!summary) {
             setStatusText('Waiting for the workflow run to appear…')
             return
@@ -105,50 +137,71 @@ export function SearchPanel() {
         },
       })
 
-      setRunUrl(run.htmlUrl)
-      if (run.conclusion !== 'success') {
-        setPhase('error')
-        setError(`Search workflow ${run.conclusion ?? 'failed'}. Open the run log for details.`)
+      const raced = await Promise.race([
+        resultsPromise.then((latest) => ({ kind: 'results' as const, latest })),
+        runPromise.then((run) => ({ kind: 'run' as const, run })),
+      ])
+
+      let latest: SearchResults | null = null
+      let run = null as Awaited<ReturnType<typeof waitForLatestWorkflowRun>> | null
+
+      if (raced.kind === 'results' && raced.latest) {
+        latest = raced.latest
+        setPhase('done')
+        setResults(latest)
+        setQueryDraft(latest.query || query)
+        setStatusText(`Found ${latest.candidates.length} candidates.`)
+        // Still settle the run promise in background for the run URL
+        void runPromise
+          .then((finished) => {
+            setRunUrl(finished.htmlUrl)
+          })
+          .catch(() => undefined)
         return
       }
 
-      setPhase('refreshing')
-      setStatusText('Search finished — loading candidates from the repository…')
+      if (raced.kind === 'run') {
+        run = raced.run
+        setRunUrl(run.htmlUrl)
+        if (run.conclusion !== 'success') {
+          resolvedEarly = true
+          setPhase('error')
+          setError(`Search workflow ${run.conclusion ?? 'failed'}. Open the run log for details.`)
+          return
+        }
+      }
 
-      // Prefer GitHub Contents/raw (immediate) over Pages CDN (often minutes behind).
-      let latest: SearchResults | null = null
-      for (let attempt = 0; attempt < 10; attempt += 1) {
+      setPhase('refreshing')
+      setStatusText('Search finished — loading candidates…')
+
+      // Prefer the exact commit SHA from the finished run when available.
+      for (let attempt = 0; attempt < 15; attempt += 1) {
+        latest = await loadSearchResults(active, run?.headSha)
+        if (isFresh(latest)) break
         latest = await loadSearchResults(active)
-        const updated =
-          latest.query === query &&
-          Boolean(latest.searchedAt) &&
-          latest.searchedAt !== previousSearchedAt &&
-          Date.parse(latest.searchedAt!) >= Date.parse(startedAt) - 60_000
-        if (updated) break
-        await new Promise((r) => window.setTimeout(r, 1500))
+        if (isFresh(latest)) break
+        await new Promise((r) => window.setTimeout(r, 800))
+      }
+
+      if (latest && isFresh(latest)) {
+        setResults(latest)
+        setQueryDraft(latest.query || query)
+        setPhase('done')
+        setStatusText(
+          latest.candidates.length === 0
+            ? `No candidates for “${query}”.`
+            : `Found ${latest.candidates.length} candidates.`,
+        )
+        return
       }
 
       if (latest) {
         setResults(latest)
-        setQueryDraft(latest.query || query)
       }
-
-      const matched =
-        latest &&
-        latest.query === query &&
-        Boolean(latest.searchedAt) &&
-        latest.searchedAt !== previousSearchedAt
-
       setPhase('done')
-      if (!matched || !latest) {
-        setStatusText(
-          'Workflow finished, but fresh results are not visible yet. Try Refresh results in a few seconds.',
-        )
-      } else if (latest.candidates.length === 0) {
-        setStatusText(`No candidates for “${query}”.`)
-      } else {
-        setStatusText(`Found ${latest.candidates.length} candidates.`)
-      }
+      setStatusText(
+        'Workflow finished, but fresh results are not visible yet. Try Refresh results.',
+      )
     } catch (err) {
       setPhase('error')
       setError(err instanceof Error ? err.message : 'Failed to start search')

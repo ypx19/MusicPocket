@@ -3,6 +3,7 @@ import type { SearchCandidate } from '../types/music'
 import {
   actionsWorkflowUrl,
   dispatchWorkflow,
+  explainFailedRun,
   loadGithubCredentials,
   waitForLatestWorkflowRun,
   type GithubCredentials,
@@ -71,6 +72,7 @@ export function ImportStatus({ candidate, creds, onClose, onNeedSetup }: ImportS
       setStatusText('Import queued — waiting for Actions to finish…')
 
       const run = await waitForLatestWorkflowRun(active, 'import-audio.yml', startedAt, {
+        pollMs: 2000,
         onUpdate: (summary) => {
           if (!summary) {
             setStatusText('Waiting for the import run to appear…')
@@ -88,17 +90,32 @@ export function ImportStatus({ candidate, creds, onClose, onNeedSetup }: ImportS
       setRunUrl(run.htmlUrl)
       if (run.conclusion !== 'success') {
         setPhase('error')
-        setError(`Import workflow ${run.conclusion ?? 'failed'}. Check the run log.`)
+        const hint = await explainFailedRun(active, run.id).catch(() => null)
+        setError(
+          [
+            `Import workflow ${run.conclusion ?? 'failed'}.`,
+            hint,
+            'YouTube often blocks GitHub runners. Add a YTDLP_COOKIES secret (Netscape cookies.txt) in the repo, then retry.',
+          ]
+            .filter(Boolean)
+            .join(' '),
+        )
         return
       }
 
-      // Prefer repository contents over Pages CDN.
-      for (let i = 0; i < 12; i += 1) {
-        const manifest = await loadSongsManifest(active).catch(() => null)
+      for (let i = 0; i < 20; i += 1) {
+        const manifest = await loadSongsManifest(active, run.headSha).catch(() => null)
         const found = manifest?.songs.some((s) => s.sourceUrl === candidate.webpageUrl)
         const grew = (manifest?.songs.length ?? 0) > beforeCount
         if (found || grew) break
-        await new Promise((r) => window.setTimeout(r, 1500))
+        const fallback = await loadSongsManifest(active).catch(() => null)
+        if (
+          fallback?.songs.some((s) => s.sourceUrl === candidate.webpageUrl) ||
+          (fallback?.songs.length ?? 0) > beforeCount
+        ) {
+          break
+        }
+        await new Promise((r) => window.setTimeout(r, 1000))
       }
 
       setPhase('done')

@@ -23,18 +23,21 @@ async function fetchJson<T>(url: string): Promise<T> {
 export async function loadRepoPublicJson<T>(
   pathFromPublic: string,
   creds?: GithubCredentials | null,
+  refOverride?: string | null,
 ): Promise<T> {
   const clean = pathFromPublic.replace(/^\//, '')
+  const ref = refOverride || creds?.ref || 'main'
 
   if (creds) {
     const [owner, repo] = creds.repo.split('/')
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/public/${clean}?ref=${encodeURIComponent(creds.ref || 'main')}`
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/public/${clean}?ref=${encodeURIComponent(ref)}`
     const response = await fetch(apiUrl, {
-      cache: 'no-cache',
+      cache: 'no-store',
       headers: {
         Accept: 'application/vnd.github.raw+json',
         Authorization: `Bearer ${creds.token}`,
         'X-GitHub-Api-Version': '2022-11-28',
+        'Cache-Control': 'no-cache',
       },
     })
     if (response.ok) {
@@ -44,7 +47,6 @@ export async function loadRepoPublicJson<T>(
 
   // Public raw URL — available as soon as the commit is on the branch
   if (creds?.repo) {
-    const ref = creds.ref || 'main'
     const rawUrl = `https://raw.githubusercontent.com/${creds.repo}/${ref}/public/${clean}?t=${Date.now()}`
     return fetchJson<T>(rawUrl)
   }
@@ -52,10 +54,13 @@ export async function loadRepoPublicJson<T>(
   throw new Error(`Unable to load ${clean} from repository`)
 }
 
-export async function loadSongsManifest(creds?: GithubCredentials | null): Promise<SongsManifest> {
+export async function loadSongsManifest(
+  creds?: GithubCredentials | null,
+  refOverride?: string | null,
+): Promise<SongsManifest> {
   if (creds) {
     try {
-      const data = await loadRepoPublicJson<SongsManifest>('data/songs.json', creds)
+      const data = await loadRepoPublicJson<SongsManifest>('data/songs.json', creds, refOverride)
       if (!data || !Array.isArray(data.songs)) {
         throw new Error('Invalid songs manifest')
       }
@@ -77,10 +82,13 @@ export async function loadSongsManifest(creds?: GithubCredentials | null): Promi
   return data
 }
 
-export async function loadSearchResults(creds?: GithubCredentials | null): Promise<SearchResults> {
+export async function loadSearchResults(
+  creds?: GithubCredentials | null,
+  refOverride?: string | null,
+): Promise<SearchResults> {
   if (creds) {
     try {
-      return await loadRepoPublicJson<SearchResults>('data/search/latest.json', creds)
+      return await loadRepoPublicJson<SearchResults>('data/search/latest.json', creds, refOverride)
     } catch {
       // Fall through to Pages copy
     }

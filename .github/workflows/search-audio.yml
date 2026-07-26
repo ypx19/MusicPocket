@@ -28,10 +28,27 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Set up Deno (yt-dlp JS runtime)
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r scripts/requirements.txt
+          pip install -U -r scripts/requirements.txt
+
+      - name: Prepare optional YouTube cookies
+        env:
+          YTDLP_COOKIES: ${{ secrets.YTDLP_COOKIES }}
+        run: |
+          if [ -n "${YTDLP_COOKIES}" ]; then
+            printf '%s\n' "$YTDLP_COOKIES" > "$RUNNER_TEMP/ytdlp-cookies.txt"
+            echo "YTDLP_COOKIES_FILE=$RUNNER_TEMP/ytdlp-cookies.txt" >> "$GITHUB_ENV"
+            echo "[cookies] YTDLP_COOKIES secret loaded"
+          else
+            echo "[cookies] No YTDLP_COOKIES secret (search usually works without it)"
+          fi
 
       - name: Validate inputs
         env:

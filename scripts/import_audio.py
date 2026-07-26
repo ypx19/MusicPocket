@@ -23,6 +23,7 @@ from utils import (
     validate_https_url,
     write_json,
 )
+from ytdlp_args import ytdlp_base_args
 
 
 def run(cmd: list[str], stage: str) -> subprocess.CompletedProcess[str]:
@@ -33,6 +34,13 @@ def run(cmd: list[str], stage: str) -> subprocess.CompletedProcess[str]:
         fail(stage, f"Command not found: {cmd[0]}")
     if completed.returncode != 0:
         err = (completed.stderr or completed.stdout or "").strip()
+        if "Sign in to confirm" in err or "not a bot" in err.lower():
+            fail(
+                stage,
+                "YouTube bot-check blocked extraction. Add a repo secret YTDLP_COOKIES "
+                "(Netscape cookies.txt from a logged-in browser) and re-run. "
+                f"Details: {err}",
+            )
         fail(stage, err or f"{cmd[0]} failed with code {completed.returncode}")
     return completed
 
@@ -63,7 +71,7 @@ def probe_duration(path: Path) -> float | None:
 
 def extract_metadata(url: str) -> dict:
     completed = run(
-        ["yt-dlp", "--dump-json", "--no-download", "--no-playlist", url],
+        ["yt-dlp", *ytdlp_base_args(), "--dump-json", "--no-download", url],
         "metadata",
     )
     try:
@@ -127,7 +135,7 @@ def main() -> int:
         run(
             [
                 "yt-dlp",
-                "--no-playlist",
+                *ytdlp_base_args(),
                 "-f",
                 "bestaudio/best",
                 "-o",

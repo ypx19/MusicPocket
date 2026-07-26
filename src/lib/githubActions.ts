@@ -97,23 +97,33 @@ export interface WorkflowRunSummary {
   conclusion: WorkflowConclusion | null
   htmlUrl: string
   createdAt: string
+  headSha: string | null
 }
 
 export async function waitForLatestWorkflowRun(
   creds: GithubCredentials,
   workflowFile: string,
   startedAfterIso: string,
-  options?: { timeoutMs?: number; pollMs?: number; onUpdate?: (run: WorkflowRunSummary | null) => void },
+  options?: {
+    timeoutMs?: number
+    pollMs?: number
+    onUpdate?: (run: WorkflowRunSummary | null) => void
+    shouldCancel?: () => boolean
+  },
 ): Promise<WorkflowRunSummary> {
   const timeoutMs = options?.timeoutMs ?? 10 * 60 * 1000
-  const pollMs = options?.pollMs ?? 4000
+  const pollMs = options?.pollMs ?? 1500
   const [owner, repo] = creds.repo.split('/')
   const startedAfter = Date.parse(startedAfterIso)
   const deadline = Date.now() + timeoutMs
 
   while (Date.now() < deadline) {
+    if (options?.shouldCancel?.()) {
+      throw new Error('Cancelled')
+    }
+
     const response = await githubFetch(
-      `/repos/${owner}/${repo}/actions/workflows/${encodeURIComponent(workflowFile)}/runs?per_page=5&event=workflow_dispatch`,
+      `/repos/${owner}/${repo}/actions/workflows/${encodeURIComponent(workflowFile)}/runs?per_page=8&event=workflow_dispatch`,
       creds.token,
     )
     if (!response.ok) {
@@ -126,6 +136,7 @@ export async function waitForLatestWorkflowRun(
         conclusion: string | null
         html_url: string
         created_at: string
+        head_sha?: string
       }>
     }
     const run = (data.workflow_runs ?? []).find((r) => Date.parse(r.created_at) >= startedAfter - 5000)
@@ -136,12 +147,24 @@ export async function waitForLatestWorkflowRun(
           conclusion: run.conclusion,
           htmlUrl: run.html_url,
           createdAt: run.created_at,
+          headSha: run.head_sha ?? null,
         }
       : null
 
     options?.onUpdate?.(summary)
 
     if (summary && summary.status === 'completed') {
+      // Refresh once more for the final head_sha after the push commit lands
+      const detail = await githubFetch(`/repos/${owner}/${repo}/actions/runs/${summary.id}`, creds.token)
+      if (detail.ok) {
+        const body = (await detail.json()) as { head_sha?: string; html_url?: string; conclusion?: string }
+        return {
+          ...summary,
+          headSha: body.head_sha ?? summary.headSha,
+          htmlUrl: body.html_url ?? summary.htmlUrl,
+          conclusion: body.conclusion ?? summary.conclusion,
+        }
+      }
       return summary
     }
 
@@ -149,6 +172,19 @@ export async function waitForLatestWorkflowRun(
   }
 
   throw new Error('Timed out waiting for the GitHub Actions run to finish')
+}
+
+export async function explainFailedRun(creds: GithubCredentials, runId: number): Promise<string | null> {
+  const [owner, repo] = creds.repo.split('/')
+  const response = await githubFetch(`/repos/${owner}/${repo}/actions/runs/${runId}/jobs`, creds.token)
+  if (!response.ok) return null
+  const data = (await response.json()) as {
+    jobs?: Array<{ conclusion: string | null; steps?: Array<{ name: string; conclusion: string | null }> }>
+  }
+  const failed = (data.jobs ?? []).find((j) => j.conclusion === 'failure')
+  const step = failed?.steps?.find((s) => s.conclusion === 'failure')
+  if (!step) return null
+  return `Failed step: ${step.name}`
 }
 
 function sleep(ms: number): Promise<void> {

@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from utils import SEARCH_LATEST, fail, log, write_json
+from ytdlp_args import ytdlp_base_args
 
 
 def run_search(query: str, max_results: int) -> list[dict]:
@@ -18,12 +19,15 @@ def run_search(query: str, max_results: int) -> list[dict]:
     target = f"ytsearch{max_results}:{query}"
     cmd = [
         "yt-dlp",
+        *ytdlp_base_args(),
         target,
         "--flat-playlist",
         "--dump-json",
         "--no-download",
         "--no-warnings",
     ]
+    # ytdlp_base_args includes --no-playlist; keep search playlist behavior
+    cmd = [c for c in cmd if c != "--no-playlist"]
     log("search", f"Running: yt-dlp ytsearch{max_results}:<query> --flat-playlist --dump-json")
     try:
         completed = subprocess.run(
