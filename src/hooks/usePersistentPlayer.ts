@@ -11,6 +11,7 @@ export function usePersistentPlayer(library: Song[]): AudioPlayerApi {
     isPlaying: player.isPlaying,
     currentTime: player.currentTime,
     duration: player.duration,
+    audioRef: player.audioRef,
     onPlay: () => {
       void player.play()
     },
