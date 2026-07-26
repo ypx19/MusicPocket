@@ -1,7 +1,18 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-26T00:00:00.000Z",
+  "updatedAt": "2026-07-26T23:10:07.583005+00:00",
   "songs": [
+    {
+      "id": "eason-chan--eason-chan-it-s-over-officia-00541fb027",
+      "title": "陳奕迅 Eason Chan 《可以了》 IT’S OVER  [Official MV]",
+      "artist": "Eason Chan",
+      "audioUrl": "music/eason-chan--eason-chan-it-s-over-officia-00541fb027.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=UbUsGd5h16E",
+      "sourceName": "youtube",
+      "importedAt": "2026-07-26T23:10:07.582814+00:00",
+      "duration": 303,
+      "coverUrl": "covers/eason-chan--eason-chan-it-s-over-officia-00541fb027.jpg"
+    },
     {
       "id": "sample-aurora",
       "title": "Sample Aurora",
