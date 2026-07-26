@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { SearchCandidate } from '../types/music'
 import {
   actionsWorkflowUrl,
@@ -9,6 +9,17 @@ import {
   type GithubCredentials,
 } from '../lib/githubActions'
 import { loadSongsManifest } from '../lib/songs'
+
+function suggestDisplayTitle(raw: string): string {
+  const book = raw.match(/《([^》]+)》/)
+  if (book?.[1]) return book[1].trim()
+  const cleaned = raw
+    .replace(/\[[^\]]*official[^\]]*\]/gi, '')
+    .replace(/\([^)]*official[^)]*\)/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return cleaned || raw
+}
 
 interface ImportStatusProps {
   candidate: SearchCandidate
@@ -27,7 +38,7 @@ export function ImportStatus({
   onNeedSetup,
   onImportComplete,
 }: ImportStatusProps) {
-  const [title, setTitle] = useState(candidate.title)
+  const [title, setTitle] = useState(() => suggestDisplayTitle(candidate.title))
   const [artist, setArtist] = useState(candidate.uploader ?? '')
   const [album, setAlbum] = useState('')
   const [license, setLicense] = useState('')
@@ -38,6 +49,10 @@ export function ImportStatus({
   const [runUrl, setRunUrl] = useState<string | null>(null)
 
   const busy = phase === 'dispatching' || phase === 'running'
+  const titleHint = useMemo(() => {
+    const suggested = suggestDisplayTitle(candidate.title)
+    return suggested !== candidate.title ? `Suggested clean title: ${suggested}` : null
+  }, [candidate.title])
 
   async function runImport() {
     if (!confirmed) {
@@ -171,6 +186,8 @@ export function ImportStatus({
           Display title
           <input value={title} onChange={(e) => setTitle(e.target.value)} disabled={busy} />
         </label>
+        {titleHint ? <p className="muted small">{titleHint}</p> : null}
+        <p className="muted small">Clean titles (e.g. 可以了) match lyrics providers more reliably than full YouTube titles.</p>
         <label>
           Artist
           <input value={artist} onChange={(e) => setArtist(e.target.value)} disabled={busy} />
