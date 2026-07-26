@@ -1,6 +1,79 @@
 {
-  "query": "",
-  "searchedAt": null,
+  "query": "1973",
+  "searchedAt": "2026-07-26T22:23:06.384065+00:00",
   "maxResults": 8,
-  "candidates": []
+  "candidates": [
+    {
+      "id": "uWeqeQkjLto",
+      "title": "James Blunt - 1973 (Official Music Video)",
+      "uploader": "James Blunt",
+      "duration": 234,
+      "thumbnail": "https://i.ytimg.com/vi/uWeqeQkjLto/hq720.jpg?sqp=-oaymwE2CNAFEJQDSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgB_gmAAtAFigIMCAAQARhUIGUoYTAP&rs=AOn4CLDSor6HB9cn5mFfhyRKeyompuRgaQ",
+      "webpageUrl": "https://www.youtube.com/watch?v=uWeqeQkjLto",
+      "source": "youtube"
+    },
+    {
+      "id": "me0JeKA39WA",
+      "title": "TIMELINE 1973 -  Everything That Happened In '73",
+      "uploader": "Weird History",
+      "duration": 1381,
+      "thumbnail": "https://i.ytimg.com/vi/me0JeKA39WA/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBYxRKD7nF6TW8imho_XQ8i_-XjTQ",
+      "webpageUrl": "https://www.youtube.com/watch?v=me0JeKA39WA",
+      "source": "youtube"
+    },
+    {
+      "id": "ywvqNBOArZw",
+      "title": "1973 Week 1 - N.Y. Jets at Green Bay",
+      "uploader": "Sports !",
+      "duration": 9067,
+      "thumbnail": "https://i.ytimg.com/vi/ywvqNBOArZw/hqdefault.jpg?sqp=-oaymwE2COADEI4CSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgBvgeAApwEigIMCAAQARhHIF4oZTAP&rs=AOn4CLCSXhnkrP7bHOEvtR8jirfARhxTRA",
+      "webpageUrl": "https://www.youtube.com/watch?v=ywvqNBOArZw",
+      "source": "youtube"
+    },
+    {
+      "id": "U-q4lEExyk8",
+      "title": "8 Things Every Home Had in 1973 — And Why They Changed Forever",
+      "uploader": "Old America Journal and American Life Journal",
+      "duration": 682,
+      "thumbnail": "https://i.ytimg.com/vi/U-q4lEExyk8/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDw3I15x7Lw-vNdcwfsSe3e2dInTg",
+      "webpageUrl": "https://www.youtube.com/watch?v=U-q4lEExyk8",
+      "source": "youtube"
+    },
+    {
+      "id": "3GYI_nxnrj8",
+      "title": "Arab Israeli War 1973 (Yom Kippur War Documentary)",
+      "uploader": "Real Time History",
+      "duration": 1737,
+      "thumbnail": "https://i.ytimg.com/vi/3GYI_nxnrj8/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAtJO8KG_3pUZ2YSiQp9IRZn4dH1w",
+      "webpageUrl": "https://www.youtube.com/watch?v=3GYI_nxnrj8",
+      "source": "youtube"
+    },
+    {
+      "id": "aTx1ht-g-kU",
+      "title": "James Blunt - 1973 (Lyrics)",
+      "uploader": "RouxioMusic",
+      "duration": 278,
+      "thumbnail": "https://i.ytimg.com/vi/aTx1ht-g-kU/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCcKFZVtFW733CrG812SGcgh1KdiA",
+      "webpageUrl": "https://www.youtube.com/watch?v=aTx1ht-g-kU",
+      "source": "youtube"
+    },
+    {
+      "id": "2NBhfc99_l8",
+      "title": "Walt Disney World in 1973",
+      "uploader": "Disney World Gold",
+      "duration": 1710,
+      "thumbnail": "https://i.ytimg.com/vi/2NBhfc99_l8/hqdefault.jpg?sqp=-oaymwEcCOADEI4CSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB5oyK3lnTQo09-91AZQ9mFiLlAAg",
+      "webpageUrl": "https://www.youtube.com/watch?v=2NBhfc99_l8",
+      "source": "youtube"
+    },
+    {
+      "id": "KoeMOMPNYjA",
+      "title": "Colyn & Sultan + Shepard - 1973 [Extended Mix]",
+      "uploader": "This Never Happened",
+      "duration": 388,
+      "thumbnail": "https://i.ytimg.com/vi/KoeMOMPNYjA/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLByY9rQf0EMoaAgy9ygajcHY2pfWg",
+      "webpageUrl": "https://www.youtube.com/watch?v=KoeMOMPNYjA",
+      "source": "youtube"
+    }
+  ]
 }
