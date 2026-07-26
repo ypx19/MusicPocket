@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -71,7 +72,14 @@ def probe_duration(path: Path) -> float | None:
 
 def extract_metadata(url: str) -> dict:
     completed = run(
-        ["yt-dlp", *ytdlp_base_args(), "--dump-json", "--no-download", url],
+        [
+            "yt-dlp",
+            *ytdlp_base_args(),
+            "--dump-json",
+            "--skip-download",
+            "--ignore-no-formats-error",
+            url,
+        ],
         "metadata",
     )
     try:
@@ -149,9 +157,48 @@ def main() -> int:
         )
 
         downloads = list(tmp_dir.glob("download.*"))
-        media_files = [p for p in downloads if p.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}]
+        media_files = [
+            p
+            for p in downloads
+            if p.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp", ".json", ".vtt", ".srt"}
+        ]
         if not media_files:
-            fail("download", "No media file downloaded")
+            # Retry with a broader client set if the first attempt only got images.
+            log("download", "No audio media found; retrying with alternate YouTube clients")
+            run(
+                [
+                    "yt-dlp",
+                    "--js-runtimes",
+                    "deno",
+                    "--remote-components",
+                    "ejs:github",
+                    "--extractor-args",
+                    "youtube:player_client=ios,tv_embedded,mweb,android",
+                    "--no-playlist",
+                    *(
+                        ["--cookies", os.environ["YTDLP_COOKIES_FILE"]]
+                        if os.environ.get("YTDLP_COOKIES_FILE")
+                        else []
+                    ),
+                    "-f",
+                    "bestaudio/best/bestaudio*",
+                    "-o",
+                    outtmpl,
+                    "--write-thumbnail",
+                    "--convert-thumbnails",
+                    "jpg",
+                    source_url,
+                ],
+                "download",
+            )
+            downloads = list(tmp_dir.glob("download.*"))
+            media_files = [
+                p
+                for p in downloads
+                if p.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp", ".json", ".vtt", ".srt"}
+            ]
+        if not media_files:
+            fail("download", "No media file downloaded (YouTube returned no audio formats)")
         media = media_files[0]
         log("download", f"Got {media.name}")
 
