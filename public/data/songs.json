@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-27T04:23:53.897865+00:00",
+  "updatedAt": "2026-07-27T04:26:13.452667+00:00",
   "songs": [
     {
       "id": "eason-chan--eason-chan-it-s-over-officia-00541fb027",
@@ -76,6 +76,17 @@
       "importedAt": "2026-07-27T00:02:43.622557+00:00",
       "duration": 321,
       "coverUrl": "covers/track-404f347423.jpg"
+    },
+    {
+      "id": "track-284f2c696d",
+      "title": "奉献",
+      "artist": "韩寒",
+      "audioUrl": "music/track-284f2c696d.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=UfI2TuVJt3o",
+      "sourceName": "youtube",
+      "importedAt": "2026-07-27T04:26:13.452265+00:00",
+      "duration": 222,
+      "coverUrl": "covers/track-284f2c696d.jpg"
     }
   ]
 }
