@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-27T05:03:39.346240+00:00",
+  "updatedAt": "2026-07-27T05:06:23.619517+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -65,6 +65,18 @@
       "sourceName": "Generated sample",
       "license": "CC0 — synthetic demo tone generated with FFmpeg",
       "importedAt": "2026-07-26T00:00:00.000Z"
+    },
+    {
+      "id": "dongyun-fd83653ed8",
+      "title": "天地缓缓",
+      "artist": "东韵Dongyun",
+      "audioUrl": "music/dongyun-fd83653ed8.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=eYUe0o8JRNI",
+      "sourceName": "youtube",
+      "importedAt": "2026-07-27T05:06:23.619060+00:00",
+      "duration": 177,
+      "coverUrl": "covers/dongyun-fd83653ed8.jpg",
+      "lyricsUrl": "lyrics/dongyun-fd83653ed8.lrc"
     },
     {
       "id": "track-4d51eca561",
