@@ -94,7 +94,7 @@ publish_public() {
     upstream_branch="$branch"
   fi
 
-  echo "[git] Integrating $upstream_remote/$upstream_branch (pull --rebase)…"
+  echo "[git] Integrating ${upstream_remote}/${upstream_branch} (pull --rebase)..."
   if ! git pull --rebase "$upstream_remote" "$upstream_branch"; then
     echo "[git] ERROR: rebase failed. Resolve conflicts, then:" >&2
     echo "  git add -A && git rebase --continue && git push" >&2
@@ -109,7 +109,7 @@ publish_public() {
     return 0
   fi
 
-  echo "[git] Pushing $ahead commit(s) to $upstream_remote/$upstream_branch…"
+  echo "[git] Pushing ${ahead} commit(s) to ${upstream_remote}/${upstream_branch}..."
   if git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
     git push
   else
