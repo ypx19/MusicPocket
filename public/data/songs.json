@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-27T00:02:43.623737+00:00",
+  "updatedAt": "2026-07-27T04:23:53.897865+00:00",
   "songs": [
     {
       "id": "eason-chan--eason-chan-it-s-over-officia-00541fb027",
@@ -53,6 +53,18 @@
       "duration": 275,
       "coverUrl": "covers/track-267db27f6e.jpg",
       "lyricsUrl": "lyrics/track-267db27f6e.lrc"
+    },
+    {
+      "id": "track-3d363cafa9",
+      "title": "葡萄成熟时",
+      "artist": "陈奕迅",
+      "audioUrl": "music/track-3d363cafa9.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=xdqtxq9JPNI",
+      "sourceName": "youtube",
+      "importedAt": "2026-07-27T04:23:53.897160+00:00",
+      "duration": 279,
+      "coverUrl": "covers/track-3d363cafa9.jpg",
+      "lyricsUrl": "lyrics/track-3d363cafa9.lrc"
     },
     {
       "id": "track-404f347423",
