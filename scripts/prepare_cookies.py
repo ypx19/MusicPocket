@@ -2,6 +2,7 @@
 """Write and validate a Netscape cookies.txt for yt-dlp from Actions secrets.
 
 Tries YTDLP_COOKIES_B64 first, then falls back to YTDLP_COOKIES.
+Always ensures a Netscape header (yt-dlp/MozillaCookieJar requires it).
 """
 
 from __future__ import annotations
@@ -9,34 +10,68 @@ from __future__ import annotations
 import base64
 import os
 import sys
+import tempfile
+from http.cookiejar import LoadError, MozillaCookieJar
 from pathlib import Path
+
+NETSCAPE_HEADER = "# Netscape HTTP Cookie File"
+
+
+def normalize_cookie_text(text: str) -> str:
+    text = text.replace("\r\n", "\n").replace("\r", "\n").lstrip("\ufeff")
+    if not text.endswith("\n"):
+        text += "\n"
+    first = text.split("\n", 1)[0].strip()
+    if first.startswith("# Netscape HTTP Cookie File") or first.startswith("# HTTP Cookie File"):
+        return text
+    return f"{NETSCAPE_HEADER}\n{text}"
 
 
 def validate_cookie_text(text: str) -> tuple[bool, str, dict[str, int | str]]:
-    lines = [ln for ln in text.splitlines() if ln.strip() and not ln.strip().startswith("#")]
+    normalized = normalize_cookie_text(text)
+    lines = [ln for ln in normalized.splitlines() if ln.strip() and not ln.strip().startswith("#")]
     youtube_lines = [ln for ln in lines if "youtube.com" in ln.lower()]
     tabbed = sum(1 for ln in youtube_lines if "\t" in ln)
+    seven_fields = 0
+    present: list[str] = []
+    for ln in youtube_lines:
+        parts = ln.split("\t")
+        if len(parts) >= 7:
+            seven_fields += 1
+            present.append(parts[5])
     stats: dict[str, int | str] = {
         "total_data_lines": len(lines),
         "youtube_lines": len(youtube_lines),
         "tab_separated": tabbed,
+        "seven_fields": seven_fields,
+        "has_netscape_header": "yes",
     }
 
     if len(youtube_lines) == 0:
         return False, "No youtube.com rows found", stats
     if tabbed == 0:
         return False, "Cookie rows have no TAB characters (secret likely mangled spaces)", stats
+    if seven_fields == 0:
+        return False, "No Netscape rows with 7 tab-separated fields", stats
 
     important = ("SID", "HSID", "SSID", "LOGIN_INFO", "__Secure-1PSID", "__Secure-3PSID", "APISID", "SAPISID")
-    present: list[str] = []
-    for ln in youtube_lines:
-        parts = ln.split("\t")
-        if len(parts) >= 6:
-            present.append(parts[5])
     found = [name for name in important if name in present]
     stats["auth_cookie_names_found"] = ",".join(found) if found else "none"
+
+    # Match yt-dlp: must load via MozillaCookieJar
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", newline="\n", delete=False) as tmp:
+        tmp.write(normalized)
+        tmp_path = tmp.name
+    try:
+        jar = MozillaCookieJar(tmp_path)
+        jar.load(ignore_discard=True, ignore_expires=True)
+        stats["mozilla_loaded"] = len(jar)
+    except LoadError as err:
+        return False, f"MozillaCookieJar rejected file ({err})", stats
+    finally:
+        Path(tmp_path).unlink(missing_ok=True)
+
     if not found:
-        # Still usable sometimes; warn but accept.
         return True, "OK (warning: no common auth cookie names detected)", stats
     return True, "OK", stats
 
@@ -49,7 +84,6 @@ def try_b64(out: Path) -> tuple[bool, str]:
         data = base64.b64decode(b64, validate=False)
     except Exception as err:  # noqa: BLE001
         return False, f"YTDLP_COOKIES_B64 invalid base64 ({err})"
-    # Decode as text for validation; keep original bytes on disk.
     try:
         text = data.decode("utf-8")
     except UnicodeDecodeError:
@@ -58,7 +92,8 @@ def try_b64(out: Path) -> tuple[bool, str]:
     print(f"[cookies] tried=YTDLP_COOKIES_B64 ok={ok} detail={message} stats={stats}")
     if not ok:
         return False, message
-    out.write_bytes(data if data.endswith(b"\n") else data + b"\n")
+    normalized = normalize_cookie_text(text)
+    out.write_text(normalized, encoding="utf-8", newline="\n")
     return True, "YTDLP_COOKIES_B64"
 
 
@@ -66,12 +101,11 @@ def try_raw(out: Path) -> tuple[bool, str]:
     raw = os.environ.get("YTDLP_COOKIES", "")
     if not raw.strip():
         return False, "YTDLP_COOKIES empty"
-    text = raw if raw.endswith("\n") else raw + "\n"
-    ok, message, stats = validate_cookie_text(text)
+    ok, message, stats = validate_cookie_text(raw)
     print(f"[cookies] tried=YTDLP_COOKIES ok={ok} detail={message} stats={stats}")
     if not ok:
         return False, message
-    out.write_text(text, encoding="utf-8", newline="\n")
+    out.write_text(normalize_cookie_text(raw), encoding="utf-8", newline="\n")
     return True, "YTDLP_COOKIES"
 
 

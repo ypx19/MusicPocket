@@ -57,7 +57,7 @@ export async function syncYoutubeCookieSecrets(
   creds: GithubCredentials,
   cookiesTxt: string,
 ): Promise<{ rawBytes: number; b64Length: number }> {
-  const normalized = cookiesTxt.replace(/\r\n/g, '\n')
+  let normalized = cookiesTxt.replace(/\r\n/g, '\n').replace(/^\uFEFF/, '')
   if (!normalized.includes('youtube.com')) {
     throw new Error('Paste Netscape cookies.txt that includes youtube.com rows.')
   }
@@ -67,9 +67,15 @@ export async function syncYoutubeCookieSecrets(
     )
   }
 
-  const b64 = btoa(unescape(encodeURIComponent(normalized.endsWith('\n') ? normalized : `${normalized}\n`)))
+  const first = normalized.split('\n', 1)[0]?.trim() ?? ''
+  if (!first.startsWith('# Netscape HTTP Cookie File') && !first.startsWith('# HTTP Cookie File')) {
+    normalized = `# Netscape HTTP Cookie File\n${normalized}`
+  }
+  if (!normalized.endsWith('\n')) normalized += '\n'
+
+  const b64 = btoa(unescape(encodeURIComponent(normalized)))
   await upsertRepositorySecret(creds, 'YTDLP_COOKIES_B64', b64)
-  await upsertRepositorySecret(creds, 'YTDLP_COOKIES', normalized.endsWith('\n') ? normalized : `${normalized}\n`)
+  await upsertRepositorySecret(creds, 'YTDLP_COOKIES', normalized)
   return { rawBytes: normalized.length, b64Length: b64.length }
 }
 
