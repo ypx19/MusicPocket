@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-27T04:52:17.128722+00:00",
+  "updatedAt": "2026-07-27T04:55:50.612974+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -13,6 +13,18 @@
       "duration": 217,
       "coverUrl": "covers/badfinger-baby-blue-d2b7f1be83.jpg",
       "lyricsUrl": "lyrics/badfinger-baby-blue-d2b7f1be83.lrc"
+    },
+    {
+      "id": "coldplay-the-scientist-d80823fe09",
+      "title": "The Scientist",
+      "artist": "Coldplay",
+      "audioUrl": "music/coldplay-the-scientist-d80823fe09.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=RB-RcX5DS5A",
+      "sourceName": "youtube",
+      "importedAt": "2026-07-27T04:55:50.612043+00:00",
+      "duration": 265,
+      "coverUrl": "covers/coldplay-the-scientist-d80823fe09.jpg",
+      "lyricsUrl": "lyrics/coldplay-the-scientist-d80823fe09.lrc"
     },
     {
       "id": "eason-chan--eason-chan-it-s-over-officia-00541fb027",
