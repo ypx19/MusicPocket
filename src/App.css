@@ -383,12 +383,24 @@
   padding: 1rem;
 }
 
+.cookie-paste {
+  margin-bottom: 1rem;
+  display: grid;
+  gap: 0.65rem;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 248, 240, 0.08);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.cookie-paste h3,
 .github-setup h3 {
   margin: 0;
   font-family: 'Fraunces', serif;
 }
 
 .github-setup label,
+.cookie-paste label,
 .search-workflow-box label,
 .import-sheet label {
   display: grid;
@@ -402,6 +414,13 @@
   color: var(--text);
   border-radius: 12px;
   padding: 0.65rem 0.8rem;
+}
+
+.cookie-paste .command-box {
+  width: 100%;
+  min-height: 10rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
 }
 
 .search-results {

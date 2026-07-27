@@ -11,6 +11,7 @@ import {
 import { SearchResultCard } from './SearchResultCard'
 import { ImportStatus } from './ImportStatus'
 import { GithubSetup } from './GithubSetup'
+import { CookiePaste } from './CookiePaste'
 
 type JobPhase = 'idle' | 'dispatching' | 'running' | 'refreshing' | 'done' | 'error'
 
@@ -240,13 +241,15 @@ export function SearchPanel({ onImportComplete }: SearchPanelProps) {
       ) : null}
 
       {showSetup ? (
-        <GithubSetup
-          onSaved={(next) => {
-            setCreds(next)
-            setShowSetup(false)
-            setError(null)
-          }}
-        />
+        <>
+          <GithubSetup
+            onSaved={(next) => {
+              setCreds(next)
+              setError(null)
+            }}
+          />
+          <CookiePaste creds={creds} onNeedSetup={() => setShowSetup(true)} />
+        </>
       ) : null}
 
       <form

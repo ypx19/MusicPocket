@@ -22,7 +22,8 @@ export function GithubSetup({ onSaved }: GithubSetupProps) {
       <h3>Connect GitHub Actions</h3>
       <p className="muted small">
         Paste a fine-grained PAT once. It stays in this browser’s localStorage only — never in the repo
-        or frontend bundle. Required scopes: Actions read/write (and Contents read).
+        or frontend bundle. Required scopes: Actions read/write, Contents read, and Secrets read/write
+        (for pasting YouTube cookies).
       </p>
       <label>
         Repository (owner/name)

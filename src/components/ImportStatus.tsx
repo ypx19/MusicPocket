@@ -9,6 +9,7 @@ import {
   type GithubCredentials,
 } from '../lib/githubActions'
 import { loadSongsManifest } from '../lib/songs'
+import { CookiePaste } from './CookiePaste'
 
 function suggestDisplayTitle(raw: string): string {
   const book = raw.match(/《([^》]+)》/)
@@ -311,8 +312,10 @@ export function ImportStatus({
           <div className="cloud-import">
             <p className="muted small">
               Cloud import often fails on YouTube bot-checks. Prefer local import unless you have a
-              self-hosted runner.
+              self-hosted runner. Actions will try <code>YTDLP_COOKIES_B64</code> then{' '}
+              <code>YTDLP_COOKIES</code>.
             </p>
+            <CookiePaste creds={creds} onNeedSetup={onNeedSetup} />
             <label>
               License (optional)
               <input

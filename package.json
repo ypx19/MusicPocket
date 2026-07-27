@@ -11,10 +11,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "libsodium-wrappers": "^0.8.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
+    "@types/libsodium-wrappers": "^0.7.14",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",

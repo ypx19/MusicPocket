@@ -41,14 +41,21 @@ jobs:
 
       - name: Prepare optional YouTube cookies
         env:
+          YTDLP_COOKIES_B64: ${{ secrets.YTDLP_COOKIES_B64 }}
           YTDLP_COOKIES: ${{ secrets.YTDLP_COOKIES }}
+          YTDLP_COOKIES_OUT: ${{ runner.temp }}/ytdlp-cookies.txt
         run: |
-          if [ -n "${YTDLP_COOKIES}" ]; then
-            printf '%s\n' "$YTDLP_COOKIES" > "$RUNNER_TEMP/ytdlp-cookies.txt"
-            echo "YTDLP_COOKIES_FILE=$RUNNER_TEMP/ytdlp-cookies.txt" >> "$GITHUB_ENV"
-            echo "[cookies] YTDLP_COOKIES secret loaded"
-          else
-            echo "[cookies] No YTDLP_COOKIES secret (search usually works without it)"
+          set +e
+          python scripts/prepare_cookies.py | tee /tmp/cookies-prep.txt
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            echo "[cookies] Cookie prep failed; continuing search without cookies"
+            exit 0
+          fi
+          if grep -q '^YTDLP_COOKIES_FILE=' /tmp/cookies-prep.txt; then
+            file="$(grep '^YTDLP_COOKIES_FILE=' /tmp/cookies-prep.txt | tail -1 | cut -d= -f2-)"
+            echo "YTDLP_COOKIES_FILE=$file" >> "$GITHUB_ENV"
           fi
 
       - name: Validate inputs

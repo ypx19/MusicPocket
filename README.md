@@ -82,17 +82,24 @@ You do **not** need to open the Actions UI for normal search/import. Optional �
 
 GitHub-hosted runners are often blocked by YouTube (“Sign in to confirm you’re not a bot”).
 
-**Preferred secret format (base64)** — plain text secrets often break TAB characters in `cookies.txt`:
+**Easiest: paste cookies in the web UI**
+
+1. Open **GitHub setup** (or Advanced → cloud import)
+2. Export Netscape `cookies.txt` for youtube.com (Chrome extension “Get cookies.txt LOCALLY”)
+3. Paste into the cookie box → **保存到 GitHub Secrets**
+
+That writes both `YTDLP_COOKIES_B64` and `YTDLP_COOKIES`. Import/search Actions try **B64 first**, then fall back to raw.
+
+PAT needs **Secrets: Read and write** in addition to Actions/Contents.
+
+**Manual secret (optional):**
 
 ```bash
 # macOS — after exporting Netscape cookies.txt for youtube.com
 base64 -i cookies.txt | pbcopy
 ```
 
-1. Repo **Settings → Secrets and variables → Actions → New repository secret**
-2. Name: `YTDLP_COOKIES_B64`
-3. Paste the base64 value → Save
-4. You can delete the old `YTDLP_COOKIES` secret
+Repo **Settings → Secrets and variables → Actions** → set `YTDLP_COOKIES_B64` (and optionally `YTDLP_COOKIES`).
 
 Re-export cookies while logged into youtube.com if they are stale.
 
