@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-26T23:43:40.068834+00:00",
+  "updatedAt": "2026-07-27T00:02:43.623737+00:00",
   "songs": [
     {
       "id": "eason-chan--eason-chan-it-s-over-officia-00541fb027",
@@ -53,6 +53,17 @@
       "duration": 275,
       "coverUrl": "covers/track-267db27f6e.jpg",
       "lyricsUrl": "lyrics/track-267db27f6e.lrc"
+    },
+    {
+      "id": "track-404f347423",
+      "title": "凡人诀",
+      "artist": "陈楚生",
+      "audioUrl": "music/track-404f347423.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=65Pe8UJye4w",
+      "sourceName": "youtube",
+      "importedAt": "2026-07-27T00:02:43.622557+00:00",
+      "duration": 321,
+      "coverUrl": "covers/track-404f347423.jpg"
     }
   ]
 }
