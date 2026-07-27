@@ -59,6 +59,8 @@ export function useAudioPlayer(library: Song[]): AudioPlayerApi {
   const [shuffle, setShuffleState] = useState(initial.shuffle)
   const [pendingSeek, setPendingSeek] = useState(initial.position)
   const restoredRef = useRef(false)
+  /** Play after the next src load finishes (avoids racing setTimeout play vs audio.load). */
+  const autoplayAfterLoadRef = useRef(false)
 
   const songMap = useCallback((ids: string[]) => {
     const map = new Map(libraryRef.current.map((s) => [s.id, s]))
@@ -136,6 +138,26 @@ export function useAudioPlayer(library: Song[]): AudioPlayerApi {
     }
   }, [library, currentSongId, queueIds])
 
+  const play = useCallback(async () => {
+    const audio = audioRef.current
+    if (!audio) return
+    try {
+      await audio.play()
+      setStatus('playing')
+      setError(null)
+    } catch (err) {
+      setStatus('paused')
+      const message = err instanceof Error ? err.message : 'Playback blocked'
+      setError(`Press play to start audio (${message})`)
+    }
+  }, [])
+
+  const pause = useCallback(() => {
+    autoplayAfterLoadRef.current = false
+    audioRef.current?.pause()
+    setStatus('paused')
+  }, [])
+
   // Load src when song changes (never recreate element)
   useEffect(() => {
     const audio = audioRef.current
@@ -145,12 +167,16 @@ export function useAudioPlayer(library: Song[]): AudioPlayerApi {
     if (!url) return
 
     const absolute = new URL(url, window.location.href).href
+    const shouldAutoplay = autoplayAfterLoadRef.current
+
     if (audio.src !== absolute) {
       setStatus('loading')
       setError(null)
       audio.src = url
       audio.load()
     }
+
+    let cancelled = false
 
     const applySeek = () => {
       if (pendingSeek > 0 && Number.isFinite(pendingSeek)) {
@@ -163,17 +189,46 @@ export function useAudioPlayer(library: Song[]): AudioPlayerApi {
       }
     }
 
-    if (audio.readyState >= 1) {
+    const startIfNeeded = () => {
+      if (cancelled) return
+      applySeek()
+      if (shouldAutoplay) {
+        autoplayAfterLoadRef.current = false
+        void play()
+      }
+    }
+
+    // HAVE_FUTURE_DATA (3): enough data to start playback
+    if (audio.readyState >= 3) {
+      startIfNeeded()
+      return () => {
+        cancelled = true
+      }
+    }
+
+    const onCanPlay = () => {
+      startIfNeeded()
+      audio.removeEventListener('canplay', onCanPlay)
+    }
+    const onMeta = () => {
+      applySeek()
+      audio.removeEventListener('loadedmetadata', onMeta)
+    }
+
+    if (shouldAutoplay) {
+      audio.addEventListener('canplay', onCanPlay)
+    } else if (audio.readyState >= 1) {
       applySeek()
     } else {
-      const onMeta = () => {
-        applySeek()
-        audio.removeEventListener('loadedmetadata', onMeta)
-      }
       audio.addEventListener('loadedmetadata', onMeta)
-      return () => audio.removeEventListener('loadedmetadata', onMeta)
     }
-  }, [currentSong, pendingSeek])
+
+    return () => {
+      cancelled = true
+      audio.removeEventListener('canplay', onCanPlay)
+      audio.removeEventListener('loadedmetadata', onMeta)
+    }
+  }, [currentSong, pendingSeek, play])
 
   // Persist state (debounced)
   useEffect(() => {
@@ -192,25 +247,6 @@ export function useAudioPlayer(library: Song[]): AudioPlayerApi {
       if (persistTimer.current) window.clearTimeout(persistTimer.current)
     }
   }, [currentSongId, currentTime, queueIds, repeat, shuffle, volume])
-
-  const play = useCallback(async () => {
-    const audio = audioRef.current
-    if (!audio) return
-    try {
-      await audio.play()
-      setStatus('playing')
-      setError(null)
-    } catch (err) {
-      setStatus('paused')
-      const message = err instanceof Error ? err.message : 'Playback blocked'
-      setError(`Press play to start audio (${message})`)
-    }
-  }, [])
-
-  const pause = useCallback(() => {
-    audioRef.current?.pause()
-    setStatus('paused')
-  }, [])
 
   const togglePlay = useCallback(() => {
     const audio = audioRef.current
@@ -246,13 +282,18 @@ export function useAudioPlayer(library: Song[]): AudioPlayerApi {
         setQueueIds(libraryRef.current.map((s) => s.id))
       }
       setPendingSeek(0)
+      if (song.id === currentSongId) {
+        const audio = audioRef.current
+        if (audio) {
+          audio.currentTime = 0
+          void play()
+          return
+        }
+      }
+      autoplayAfterLoadRef.current = true
       setCurrentSongId(song.id)
-      // Allow play after user gesture
-      window.setTimeout(() => {
-        void play()
-      }, 0)
     },
-    [play, queueIds.length],
+    [queueIds.length, currentSongId, play],
   )
 
   const setQueueFromList = useCallback((songs: Song[], currentId?: string | null) => {
@@ -276,10 +317,16 @@ export function useAudioPlayer(library: Song[]): AudioPlayerApi {
       }
       const nextId = ids[nextIndex]
       setPendingSeek(0)
+      if (nextId === currentSongId) {
+        const audio = audioRef.current
+        if (audio) {
+          audio.currentTime = 0
+          void play()
+          return
+        }
+      }
+      autoplayAfterLoadRef.current = true
       setCurrentSongId(nextId)
-      window.setTimeout(() => {
-        void play()
-      }, 0)
     },
     [queueIds, currentSongId, repeat, play],
   )
@@ -311,10 +358,14 @@ export function useAudioPlayer(library: Song[]): AudioPlayerApi {
         next()
       } else if (repeat === 'all' && ids.length > 0) {
         setPendingSeek(0)
-        setCurrentSongId(ids[0])
-        window.setTimeout(() => {
+        const firstId = ids[0]
+        if (firstId === currentSongId) {
+          seek(0)
           void play()
-        }, 0)
+        } else {
+          autoplayAfterLoadRef.current = true
+          setCurrentSongId(firstId)
+        }
       } else {
         setStatus('paused')
       }
