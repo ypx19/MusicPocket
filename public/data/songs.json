@@ -75,7 +75,8 @@
       "sourceName": "youtube",
       "importedAt": "2026-07-27T00:02:43.622557+00:00",
       "duration": 321,
-      "coverUrl": "covers/track-404f347423.jpg"
+      "coverUrl": "covers/track-404f347423.jpg",
+      "lyricsUrl": "lyrics/track-404f347423.lrc"
     },
     {
       "id": "track-284f2c696d",
@@ -86,7 +87,8 @@
       "sourceName": "youtube",
       "importedAt": "2026-07-27T04:26:13.452265+00:00",
       "duration": 222,
-      "coverUrl": "covers/track-284f2c696d.jpg"
+      "coverUrl": "covers/track-284f2c696d.jpg",
+      "lyricsUrl": "lyrics/track-284f2c696d.lrc"
     }
   ]
 }

@@ -22,7 +22,7 @@ Import workflows require an explicit rights confirmation checkbox.
 - GitHub Actions (search + import + deploy)
 - yt-dlp (search / authorized extraction)
 - FFmpeg (MP3 conversion)
-- LRCLIB (optional synchronized lyrics)
+- LRCLIB / 网易云 / 酷狗（optional synchronized lyrics）
 - Static `public/data/songs.json` manifest
 - PWA + HTMLAudioElement + Media Session API
 
