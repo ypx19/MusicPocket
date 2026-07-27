@@ -553,3 +553,18 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.85em;
 }
+
+.command-box {
+  width: 100%;
+  margin: 0.35rem 0 0;
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 248, 240, 0.14);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  overflow: auto;
+  font-size: 0.8rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  line-height: 1.45;
+  resize: vertical;
+}

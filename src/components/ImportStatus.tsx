@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import type { SearchCandidate } from '../types/music'
 import {
   actionsWorkflowUrl,
@@ -41,6 +41,32 @@ function buildLocalImportCommand(sourceUrl: string, title: string, artist: strin
   ].join('\n')
 }
 
+async function writeClipboard(text: string, fallbackEl?: HTMLTextAreaElement | null): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text)
+      const check = navigator.clipboard.readText ? await navigator.clipboard.readText().catch(() => null) : text
+      if (check === null || check === text || check.includes('import_local.sh')) {
+        return true
+      }
+    }
+  } catch {
+    // fall through to execCommand
+  }
+
+  if (fallbackEl) {
+    fallbackEl.focus()
+    fallbackEl.select()
+    fallbackEl.setSelectionRange(0, fallbackEl.value.length)
+    try {
+      return document.execCommand('copy')
+    } catch {
+      return false
+    }
+  }
+  return false
+}
+
 interface ImportStatusProps {
   candidate: SearchCandidate
   creds: GithubCredentials | null
@@ -69,6 +95,7 @@ export function ImportStatus({
   const [runUrl, setRunUrl] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [showCloud, setShowCloud] = useState(false)
+  const commandRef = useRef<HTMLTextAreaElement | null>(null)
 
   const busy = phase === 'dispatching' || phase === 'running'
   const localCommand = useMemo(
@@ -78,7 +105,7 @@ export function ImportStatus({
 
   async function copyLocalCommand() {
     if (!confirmed) {
-      setError('Rights confirmation is required before import.')
+      setError('先勾选权利确认，再复制命令。')
       return
     }
     if (!title.trim() || !artist.trim()) {
@@ -86,14 +113,16 @@ export function ImportStatus({
       return
     }
     setError(null)
-    try {
-      await navigator.clipboard.writeText(localCommand)
-      setCopied(true)
-      setStatusText('Command copied. Paste it in your Mac terminal (repo root).')
-      window.setTimeout(() => setCopied(false), 2500)
-    } catch {
-      setError('Clipboard unavailable — select the command and copy manually.')
+    const ok = await writeClipboard(localCommand, commandRef.current)
+    if (!ok) {
+      commandRef.current?.focus()
+      commandRef.current?.select()
+      setError('自动复制失败：命令已选中，请手动 Cmd/Ctrl+C。')
+      return
     }
+    setCopied(true)
+    setStatusText(`已复制本地命令（以 scripts/import_local.sh 开头）。到仓库根目录粘贴运行。`)
+    window.setTimeout(() => setCopied(false), 2500)
   }
 
   async function runImport() {
@@ -205,8 +234,7 @@ export function ImportStatus({
         </header>
 
         <p className="muted">
-          Recommended: run the local command on your Mac (uses your browser YouTube login). GitHub Actions
-          imports are often blocked by YouTube.
+          推荐：复制本地命令，在 Mac 仓库根目录运行（使用你浏览器里的 YouTube 登录）。
         </p>
 
         <dl className="import-summary">
@@ -228,7 +256,7 @@ export function ImportStatus({
           Display title
           <input value={title} onChange={(e) => setTitle(e.target.value)} disabled={busy} />
         </label>
-        <p className="muted small">Clean titles (e.g. 红尘客栈) match lyrics providers more reliably.</p>
+        <p className="muted small">干净歌名（如 红尘客栈）更容易匹配到歌词。</p>
         <label>
           Artist
           <input value={artist} onChange={(e) => setArtist(e.target.value)} disabled={busy} />
@@ -249,8 +277,17 @@ export function ImportStatus({
         </label>
 
         <div className="import-copy">
-          <p className="muted small">Local import (recommended)</p>
-          <pre>{localCommand}</pre>
+          <p className="muted small">本地导入命令（应以 scripts/import_local.sh 开头）</p>
+          <textarea
+            ref={commandRef}
+            className="command-box"
+            readOnly
+            value={localCommand}
+            rows={3}
+            spellCheck={false}
+            onFocus={(e) => e.currentTarget.select()}
+            aria-label="Local import command"
+          />
           <div className="search-card-actions">
             <button
               type="button"
@@ -258,12 +295,11 @@ export function ImportStatus({
               disabled={!confirmed || !title.trim() || !artist.trim()}
               onClick={() => void copyLocalCommand()}
             >
-              {copied ? 'Copied' : 'Copy local command'}
+              {copied ? '已复制 ✓' : '复制本地命令'}
             </button>
           </div>
           <p className="muted small">
-            Run from the MusicPocket repo root. Safari users: prefix with{' '}
-            <code>YTDLP_COOKIES_FROM_BROWSER=safari</code>.
+            Safari：在命令前加 <code>YTDLP_COOKIES_FROM_BROWSER=safari</code>
           </p>
         </div>
 
