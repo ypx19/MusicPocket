@@ -1,7 +1,19 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-27T04:26:13.452667+00:00",
+  "updatedAt": "2026-07-27T04:43:48.112798+00:00",
   "songs": [
+    {
+      "id": "badfinger-baby-blue-d2b7f1be83",
+      "title": "Baby Blue",
+      "artist": "Badfinger",
+      "audioUrl": "music/badfinger-baby-blue-d2b7f1be83.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=33oAuvbRg-c",
+      "sourceName": "youtube",
+      "importedAt": "2026-07-27T04:43:48.112157+00:00",
+      "duration": 217,
+      "coverUrl": "covers/badfinger-baby-blue-d2b7f1be83.jpg",
+      "lyricsUrl": "lyrics/badfinger-baby-blue-d2b7f1be83.lrc"
+    },
     {
       "id": "eason-chan--eason-chan-it-s-over-officia-00541fb027",
       "title": "陳奕迅 Eason Chan 《可以了》 IT’S OVER  [Official MV]",
