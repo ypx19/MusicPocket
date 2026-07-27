@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-27T04:43:48.112798+00:00",
+  "updatedAt": "2026-07-27T04:47:50.185798+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -65,6 +65,18 @@
       "duration": 275,
       "coverUrl": "covers/track-267db27f6e.jpg",
       "lyricsUrl": "lyrics/track-267db27f6e.lrc"
+    },
+    {
+      "id": "track-d3d970098e",
+      "title": "時代を越える想い 犬夜叉～愛の果てまで～ いぬやしゃ｜チャイニーズ・シャオ・カヴァー｜ジェ・メン",
+      "artist": "孟晓洁",
+      "audioUrl": "music/track-d3d970098e.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=Kb_mfQZNIyE",
+      "sourceName": "youtube",
+      "importedAt": "2026-07-27T04:47:50.185128+00:00",
+      "duration": 145,
+      "coverUrl": "covers/track-d3d970098e.jpg",
+      "lyricsUrl": "lyrics/track-d3d970098e.lrc"
     },
     {
       "id": "track-3d363cafa9",
