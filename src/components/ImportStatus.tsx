@@ -31,15 +31,13 @@ function shellQuote(value: string): string {
 function buildLocalImportCommand(sourceUrl: string, title: string, artist: string, album: string): string {
   const parts = [
     'scripts/import_local.sh',
+    '--push',
     shellQuote(sourceUrl),
     shellQuote(title.trim() || 'Untitled'),
     shellQuote(artist.trim() || 'Unknown'),
   ]
   if (album.trim()) parts.push(shellQuote(album.trim()))
-  return [
-    parts.join(' '),
-    "git add public && git commit -m 'feat: import authorized audio' && git push",
-  ].join('\n')
+  return parts.join(' ')
 }
 
 async function writeClipboard(text: string, fallbackEl?: HTMLTextAreaElement | null): Promise<boolean> {
@@ -300,6 +298,7 @@ export function ImportStatus({
             </button>
           </div>
           <p className="muted small">
+            含 <code>--push</code>：导入后自动 commit，并 <code>git pull --rebase</code> 再 push（避免远程搜索结果抢先导致 push 失败）。
             Safari：在命令前加 <code>YTDLP_COOKIES_FROM_BROWSER=safari</code>
           </p>
         </div>

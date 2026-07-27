@@ -110,8 +110,8 @@ If Actions still fails (common — datacenter IPs get blocked), import on your M
 ```bash
 chmod +x scripts/import_local.sh
 # Chrome by default; or: YTDLP_COOKIES_FROM_BROWSER=safari
-scripts/import_local.sh "https://www.youtube.com/watch?v=VIDEO_ID" "可以了" "陈奕迅"
-git add public && git commit -m "feat: import authorized audio" && git push
+# --push commits, git pull --rebase (handles remote search commits), then pushes
+scripts/import_local.sh --push "https://www.youtube.com/watch?v=VIDEO_ID" "可以了" "陈奕迅"
 ```
 
 ### Manual Actions UI (fallback)
