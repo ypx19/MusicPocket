@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-27T04:59:30.235507+00:00",
+  "updatedAt": "2026-07-27T05:03:39.346240+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -65,6 +65,18 @@
       "sourceName": "Generated sample",
       "license": "CC0 — synthetic demo tone generated with FFmpeg",
       "importedAt": "2026-07-26T00:00:00.000Z"
+    },
+    {
+      "id": "track-4d51eca561",
+      "title": "难念的经",
+      "artist": "周华健",
+      "audioUrl": "music/track-4d51eca561.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=93OZm8Z2S8o",
+      "sourceName": "youtube",
+      "importedAt": "2026-07-27T05:03:39.345649+00:00",
+      "duration": 288,
+      "coverUrl": "covers/track-4d51eca561.jpg",
+      "lyricsUrl": "lyrics/track-4d51eca561.lrc"
     },
     {
       "id": "track-267db27f6e",
