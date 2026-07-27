@@ -2,7 +2,8 @@
 """Write and validate a Netscape cookies.txt for yt-dlp from Actions secrets.
 
 Tries YTDLP_COOKIES_B64 first, then falls back to YTDLP_COOKIES.
-Always ensures a Netscape header (yt-dlp/MozillaCookieJar requires it).
+Always ensures a Netscape header and domain/flag consistency
+(MozillaCookieJar requires: leading-dot domain <=> TRUE flag).
 """
 
 from __future__ import annotations
@@ -17,10 +18,64 @@ from pathlib import Path
 NETSCAPE_HEADER = "# Netscape HTTP Cookie File"
 
 
+def repair_cookie_line(line: str) -> tuple[str, bool]:
+    """Fix domain/includeSubdomains flag mismatch. Returns (line, changed)."""
+    if not line.strip() or line.lstrip().startswith("#"):
+        return line, False
+    # Some exporters use spaces; normalize separators to tabs when 7 fields.
+    if "\t" not in line and "youtube.com" in line.lower():
+        parts = line.split()
+        if len(parts) >= 7:
+            # value may contain spaces rarely; join rest as value
+            domain, flag, path, secure, expires, name = parts[:6]
+            value = "\t".join(parts[6:]) if len(parts) > 7 else parts[6]
+            line = "\t".join([domain, flag, path, secure, expires, name, value])
+        else:
+            return line, False
+
+    parts = line.split("\t")
+    if len(parts) < 7:
+        return line, False
+
+    domain, flag = parts[0], parts[1]
+    domain_l = domain.lower()
+    domain_specified = flag.upper() == "TRUE"
+    initial_dot = domain.startswith(".")
+    changed = False
+
+    # Cookie exporters often write www/m.youtube.com + TRUE (invalid for MozillaCookieJar).
+    # Rewrite to .youtube.com + TRUE so cookies apply to all YouTube hosts yt-dlp uses.
+    host_only_yt = {"www.youtube.com", "m.youtube.com", "youtube.com", "music.youtube.com"}
+    if domain_l in host_only_yt:
+        parts[0] = ".youtube.com"
+        parts[1] = "TRUE"
+        changed = True
+    elif domain_specified != initial_dot:
+        # Generic Netscape rule: leading-dot domain <=> TRUE include-subdomains flag.
+        parts[1] = "TRUE" if domain.startswith(".") else "FALSE"
+        changed = True
+
+    if not changed:
+        return line, False
+    return "\t".join(parts), True
+
+
 def normalize_cookie_text(text: str) -> str:
     text = text.replace("\r\n", "\n").replace("\r", "\n").lstrip("\ufeff")
     if not text.endswith("\n"):
         text += "\n"
+
+    repaired_lines: list[str] = []
+    repairs = 0
+    for line in text.splitlines():
+        fixed, changed = repair_cookie_line(line)
+        if changed:
+            repairs += 1
+        repaired_lines.append(fixed)
+    text = "\n".join(repaired_lines) + "\n"
+    if repairs:
+        print(f"[cookies] repaired {repairs} domain/flag mismatch row(s)")
+
     first = text.split("\n", 1)[0].strip()
     if first.startswith("# Netscape HTTP Cookie File") or first.startswith("# HTTP Cookie File"):
         return text
@@ -34,10 +89,12 @@ def validate_cookie_text(text: str) -> tuple[bool, str, dict[str, int | str]]:
     tabbed = sum(1 for ln in youtube_lines if "\t" in ln)
     seven_fields = 0
     present: list[str] = []
+    domains: set[str] = set()
     for ln in youtube_lines:
         parts = ln.split("\t")
         if len(parts) >= 7:
             seven_fields += 1
+            domains.add(parts[0].lower())
             present.append(parts[5])
     stats: dict[str, int | str] = {
         "total_data_lines": len(lines),
@@ -45,6 +102,7 @@ def validate_cookie_text(text: str) -> tuple[bool, str, dict[str, int | str]]:
         "tab_separated": tabbed,
         "seven_fields": seven_fields,
         "has_netscape_header": "yes",
+        "domains": ",".join(sorted(domains)) if domains else "none",
     }
 
     if len(youtube_lines) == 0:
@@ -71,6 +129,9 @@ def validate_cookie_text(text: str) -> tuple[bool, str, dict[str, int | str]]:
     finally:
         Path(tmp_path).unlink(missing_ok=True)
 
+    if domains and all(d.lstrip(".").startswith("m.youtube.") for d in domains):
+        stats["warning"] = "only m.youtube.com cookies — re-export from www.youtube.com with subdomains"
+
     if not found:
         return True, "OK (warning: no common auth cookie names detected)", stats
     return True, "OK", stats
@@ -92,8 +153,7 @@ def try_b64(out: Path) -> tuple[bool, str]:
     print(f"[cookies] tried=YTDLP_COOKIES_B64 ok={ok} detail={message} stats={stats}")
     if not ok:
         return False, message
-    normalized = normalize_cookie_text(text)
-    out.write_text(normalized, encoding="utf-8", newline="\n")
+    out.write_text(normalize_cookie_text(text), encoding="utf-8", newline="\n")
     return True, "YTDLP_COOKIES_B64"
 
 
@@ -133,8 +193,8 @@ def main() -> int:
     for err in errors:
         print(f"[cookies]  - {err}", file=sys.stderr)
     print(
-        "[cookies] Re-export Netscape cookies.txt and save via the Import page cookie box "
-        "(writes both YTDLP_COOKIES_B64 and YTDLP_COOKIES).",
+        "[cookies] Re-export Netscape cookies.txt from www.youtube.com (include subdomains) "
+        "and save via the Import page cookie box.",
         file=sys.stderr,
     )
     return 1

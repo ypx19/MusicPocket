@@ -67,6 +67,29 @@ export async function syncYoutubeCookieSecrets(
     )
   }
 
+  const hostOnlyYt = new Set(['www.youtube.com', 'm.youtube.com', 'youtube.com', 'music.youtube.com'])
+  normalized = normalized
+    .split('\n')
+    .map((line) => {
+      if (!line.trim() || line.trimStart().startsWith('#')) return line
+      const parts = line.split('\t')
+      if (parts.length < 7) return line
+      const domain = parts[0].toLowerCase()
+      if (hostOnlyYt.has(domain)) {
+        parts[0] = '.youtube.com'
+        parts[1] = 'TRUE'
+        return parts.join('\t')
+      }
+      const specified = parts[1].toUpperCase() === 'TRUE'
+      const dotted = parts[0].startsWith('.')
+      if (specified !== dotted) {
+        parts[1] = dotted ? 'TRUE' : 'FALSE'
+        return parts.join('\t')
+      }
+      return line
+    })
+    .join('\n')
+
   const first = normalized.split('\n', 1)[0]?.trim() ?? ''
   if (!first.startsWith('# Netscape HTTP Cookie File') && !first.startsWith('# HTTP Cookie File')) {
     normalized = `# Netscape HTTP Cookie File\n${normalized}`
