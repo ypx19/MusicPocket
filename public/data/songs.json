@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-27T07:19:11.602340+00:00",
+  "updatedAt": "2026-08-08T03:46:34.821978+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -89,6 +89,18 @@
       "duration": 288,
       "coverUrl": "covers/track-4d51eca561.jpg",
       "lyricsUrl": "lyrics/track-4d51eca561.lrc"
+    },
+    {
+      "id": "track-46e7a77b45",
+      "title": "神话情话",
+      "artist": "周华健 & 齐豫",
+      "audioUrl": "music/track-46e7a77b45.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=nmiRnVgnSZ8",
+      "sourceName": "youtube",
+      "importedAt": "2026-08-08T03:46:34.821446+00:00",
+      "duration": 265,
+      "coverUrl": "covers/track-46e7a77b45.jpg",
+      "lyricsUrl": "lyrics/track-46e7a77b45.lrc"
     },
     {
       "id": "track-267db27f6e",
