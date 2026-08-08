@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-08T03:46:34.821978+00:00",
+  "updatedAt": "2026-08-08T03:53:13.778944+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -13,6 +13,18 @@
       "duration": 217,
       "coverUrl": "covers/badfinger-baby-blue-d2b7f1be83.jpg",
       "lyricsUrl": "lyrics/badfinger-baby-blue-d2b7f1be83.lrc"
+    },
+    {
+      "id": "chinese-music-25d6984bfb",
+      "title": "渔舟唱晚",
+      "artist": "Chinese Music",
+      "audioUrl": "music/chinese-music-25d6984bfb.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=Vuy4YsAS0KE",
+      "sourceName": "youtube",
+      "importedAt": "2026-08-08T03:53:13.778334+00:00",
+      "duration": 324,
+      "coverUrl": "covers/chinese-music-25d6984bfb.jpg",
+      "lyricsUrl": "lyrics/chinese-music-25d6984bfb.lrc"
     },
     {
       "id": "coldplay-the-scientist-d80823fe09",
