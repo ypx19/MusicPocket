@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-08T03:53:13.778944+00:00",
+  "updatedAt": "2026-08-26T05:24:52.774627+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -89,6 +89,18 @@
       "duration": 177,
       "coverUrl": "covers/dongyun-fd83653ed8.jpg",
       "lyricsUrl": "lyrics/dongyun-fd83653ed8.lrc"
+    },
+    {
+      "id": "track-4c8411a539",
+      "title": "大梦",
+      "artist": "任素汐",
+      "audioUrl": "music/track-4c8411a539.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=nw5BqEL_HLs",
+      "sourceName": "youtube",
+      "importedAt": "2026-08-26T05:24:52.774205+00:00",
+      "duration": 462,
+      "coverUrl": "covers/track-4c8411a539.jpg",
+      "lyricsUrl": "lyrics/track-4c8411a539.lrc"
     },
     {
       "id": "track-4d51eca561",
