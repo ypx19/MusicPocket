@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-26T05:24:52.774627+00:00",
+  "updatedAt": "2026-08-26T05:46:43.566085+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -101,6 +101,18 @@
       "duration": 462,
       "coverUrl": "covers/track-4c8411a539.jpg",
       "lyricsUrl": "lyrics/track-4c8411a539.lrc"
+    },
+    {
+      "id": "track-57b9800921",
+      "title": "刀劍如夢",
+      "artist": "周华健",
+      "audioUrl": "music/track-57b9800921.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=Ij0-jMzeZ2U",
+      "sourceName": "youtube",
+      "importedAt": "2026-08-26T05:46:43.565648+00:00",
+      "duration": 196,
+      "coverUrl": "covers/track-57b9800921.jpg",
+      "lyricsUrl": "lyrics/track-57b9800921.lrc"
     },
     {
       "id": "track-4d51eca561",
