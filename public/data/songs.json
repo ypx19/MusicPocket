@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-26T05:46:43.566085+00:00",
+  "updatedAt": "2026-09-06T23:12:48.850815+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -221,6 +221,18 @@
       "duration": 359,
       "coverUrl": "covers/live-00efc41ec6.jpg",
       "lyricsUrl": "lyrics/live-00efc41ec6.lrc"
+    },
+    {
+      "id": "track-3c72d76d11",
+      "title": "趙小雷",
+      "artist": "赵雷",
+      "audioUrl": "music/track-3c72d76d11.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=kv2j-XAfvMs",
+      "sourceName": "youtube",
+      "importedAt": "2026-09-06T23:12:48.850377+00:00",
+      "duration": 220,
+      "coverUrl": "covers/track-3c72d76d11.jpg",
+      "lyricsUrl": "lyrics/track-3c72d76d11.lrc"
     },
     {
       "id": "track-3d363cafa9",
