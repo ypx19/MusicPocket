@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-06T23:12:48.850815+00:00",
+  "updatedAt": "2026-09-07T04:52:20.937860+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -209,6 +209,18 @@
       "duration": 289,
       "coverUrl": "covers/track-9cf8eec6be.jpg",
       "lyricsUrl": "lyrics/track-9cf8eec6be.lrc"
+    },
+    {
+      "id": "track-b4444361c6",
+      "title": "空谷幽兰",
+      "artist": "许巍",
+      "audioUrl": "music/track-b4444361c6.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=U4ufH87I80Q",
+      "sourceName": "youtube",
+      "importedAt": "2026-09-07T04:52:20.937326+00:00",
+      "duration": 356,
+      "coverUrl": "covers/track-b4444361c6.jpg",
+      "lyricsUrl": "lyrics/track-b4444361c6.lrc"
     },
     {
       "id": "live-00efc41ec6",
