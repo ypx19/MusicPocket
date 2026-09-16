@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-09T20:19:24.960705+00:00",
+  "updatedAt": "2026-09-16T20:43:57.283406+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -49,6 +49,18 @@
       "duration": 303,
       "coverUrl": "covers/eason-chan--eason-chan-it-s-over-officia-00541fb027.jpg",
       "lyricsUrl": "lyrics/eason-chan--eason-chan-it-s-over-officia-00541fb027.lrc"
+    },
+    {
+      "id": "haven-of-the-soul-_-fei-sun-073a77da86",
+      "title": "禅定",
+      "artist": "Haven of the Soul _ Fei Sun",
+      "audioUrl": "music/haven-of-the-soul-_-fei-sun-073a77da86.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=0KVmcb4YAgs",
+      "sourceName": "youtube",
+      "importedAt": "2026-09-16T20:43:57.283276+00:00",
+      "duration": 3990,
+      "coverUrl": "covers/haven-of-the-soul-_-fei-sun-073a77da86.jpg",
+      "lyricsUrl": "lyrics/haven-of-the-soul-_-fei-sun-073a77da86.lrc"
     },
     {
       "id": "sample-aurora",
