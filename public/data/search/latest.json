@@ -1,6 +1,6 @@
 {
   "query": "stay",
-  "searchedAt": "2026-09-20T22:11:11.983295+00:00",
+  "searchedAt": "2026-09-20T22:12:02.437427+00:00",
   "maxResults": 8,
   "candidates": [
     {
@@ -22,6 +22,15 @@
       "source": "youtube"
     },
     {
+      "id": "DS2uR1R9gVw",
+      "title": "Stay - Zahriya Zachary",
+      "uploader": "Zahriya Zachary",
+      "duration": 274,
+      "thumbnail": "https://i.ytimg.com/vi/DS2uR1R9gVw/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB0MSiY3rWt2ITWkAwdj4G0ZKp7AA",
+      "webpageUrl": "https://www.youtube.com/watch?v=DS2uR1R9gVw",
+      "source": "youtube"
+    },
+    {
       "id": "zPG1n1B0Ydw",
       "title": "Sugarland - Stay (Official Video)",
       "uploader": "Sugarland",
@@ -40,15 +49,6 @@
       "source": "youtube"
     },
     {
-      "id": "sxcRq1M_HtU",
-      "title": "Rihanna - Stay (Lyrics) I want you to stay",
-      "uploader": "TrendingTracks",
-      "duration": 242,
-      "thumbnail": "https://i.ytimg.com/vi/sxcRq1M_HtU/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCA15sASUNa-OIjRSoYt6lu_BGjuQ",
-      "webpageUrl": "https://www.youtube.com/watch?v=sxcRq1M_HtU",
-      "source": "youtube"
-    },
-    {
       "id": "JF8BRvqGCNs",
       "title": "Rihanna - Stay ft. Mikky Ekko",
       "uploader": "Rihanna",
@@ -58,12 +58,12 @@
       "source": "youtube"
     },
     {
-      "id": "LS2ifrLAadU",
-      "title": "Zedd, Alessia Cara - Stay (Lyrics) 🎤",
-      "uploader": "Taz Network",
-      "duration": 213,
-      "thumbnail": "https://i.ytimg.com/vi/LS2ifrLAadU/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCRDrfNkFtZm_OMtcv6gGw_HCOBFA",
-      "webpageUrl": "https://www.youtube.com/watch?v=LS2ifrLAadU",
+      "id": "sxcRq1M_HtU",
+      "title": "Rihanna - Stay (Lyrics) I want you to stay",
+      "uploader": "TrendingTracks",
+      "duration": 242,
+      "thumbnail": "https://i.ytimg.com/vi/sxcRq1M_HtU/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCA15sASUNa-OIjRSoYt6lu_BGjuQ",
+      "webpageUrl": "https://www.youtube.com/watch?v=sxcRq1M_HtU",
       "source": "youtube"
     },
     {
