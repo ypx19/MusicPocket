@@ -1,53 +1,8 @@
 {
-  "query": "stay",
-  "searchedAt": "2026-09-20T22:12:02.437427+00:00",
+  "query": "stay rhihanna",
+  "searchedAt": "2026-09-20T22:15:48.966281+00:00",
   "maxResults": 8,
   "candidates": [
-    {
-      "id": "kTJczUoc26U",
-      "title": "The Kid LAROI, Justin Bieber - STAY (Official Video)",
-      "uploader": "The Kid LAROI.",
-      "duration": 158,
-      "thumbnail": "https://i.ytimg.com/vi/kTJczUoc26U/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBePcCsv3lsl2pnaaTO-DNDzBJ8Dg",
-      "webpageUrl": "https://www.youtube.com/watch?v=kTJczUoc26U",
-      "source": "youtube"
-    },
-    {
-      "id": "yWHrYNP6j4k",
-      "title": "The Kid LAROI, Justin Bieber - Stay (Lyrics)",
-      "uploader": "7clouds",
-      "duration": 140,
-      "thumbnail": "https://i.ytimg.com/vi/yWHrYNP6j4k/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBoWpqlJDWP7dI2istwqVjqd20A4Q",
-      "webpageUrl": "https://www.youtube.com/watch?v=yWHrYNP6j4k",
-      "source": "youtube"
-    },
-    {
-      "id": "DS2uR1R9gVw",
-      "title": "Stay - Zahriya Zachary",
-      "uploader": "Zahriya Zachary",
-      "duration": 274,
-      "thumbnail": "https://i.ytimg.com/vi/DS2uR1R9gVw/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB0MSiY3rWt2ITWkAwdj4G0ZKp7AA",
-      "webpageUrl": "https://www.youtube.com/watch?v=DS2uR1R9gVw",
-      "source": "youtube"
-    },
-    {
-      "id": "zPG1n1B0Ydw",
-      "title": "Sugarland - Stay (Official Video)",
-      "uploader": "Sugarland",
-      "duration": 285,
-      "thumbnail": "https://i.ytimg.com/vi/zPG1n1B0Ydw/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDt2frX4uPTYdevIP31Em1Y6n2TkQ",
-      "webpageUrl": "https://www.youtube.com/watch?v=zPG1n1B0Ydw",
-      "source": "youtube"
-    },
-    {
-      "id": "-AQnfLbUIIs",
-      "title": "Last To Leave Trampoline Park Wins $10,000!",
-      "uploader": "Stay Wild",
-      "duration": 1935,
-      "thumbnail": "https://i.ytimg.com/vi/-AQnfLbUIIs/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLA0vVfEIC3IfAwv08-TkBYhp05h2g",
-      "webpageUrl": "https://www.youtube.com/watch?v=-AQnfLbUIIs",
-      "source": "youtube"
-    },
     {
       "id": "JF8BRvqGCNs",
       "title": "Rihanna - Stay ft. Mikky Ekko",
@@ -55,6 +10,24 @@
       "duration": 248,
       "thumbnail": "https://i.ytimg.com/vi/JF8BRvqGCNs/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBD6NDmFOOu_EY3T390F2sfIsVSZg",
       "webpageUrl": "https://www.youtube.com/watch?v=JF8BRvqGCNs",
+      "source": "youtube"
+    },
+    {
+      "id": "_bXqoIzH0N8",
+      "title": "Rihanna - Stay (Lyrics) ft. Mikky Ekko",
+      "uploader": "Unique Sound",
+      "duration": 238,
+      "thumbnail": "https://i.ytimg.com/vi/_bXqoIzH0N8/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCwtk9XxuPDc4ONazK8d0atS3QjZA",
+      "webpageUrl": "https://www.youtube.com/watch?v=_bXqoIzH0N8",
+      "source": "youtube"
+    },
+    {
+      "id": "CwJLFoCHHP0",
+      "title": "Rihanna - Stay (Lyrics) ft. Mikky Ekko",
+      "uploader": "X Music",
+      "duration": 240,
+      "thumbnail": "https://i.ytimg.com/vi/CwJLFoCHHP0/hqdefault.jpg?sqp=-oaymwEcCOADEI4CSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLD-yU4wPLIPTTtoyqKt3kXZtjGVRw",
+      "webpageUrl": "https://www.youtube.com/watch?v=CwJLFoCHHP0",
       "source": "youtube"
     },
     {
@@ -67,12 +40,39 @@
       "source": "youtube"
     },
     {
-      "id": "uMt12Zh6mhM",
-      "title": "The Kid LAROI, Justin Bieber - Stay (Video Letra/Lyrics)",
-      "uploader": "RadioReggaeton",
-      "duration": 158,
-      "thumbnail": "https://i.ytimg.com/vi/uMt12Zh6mhM/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAR90hFDU4u4ZUuZPm6xOnIKR6P6A",
-      "webpageUrl": "https://www.youtube.com/watch?v=uMt12Zh6mhM",
+      "id": "bhGqtMsp0-w",
+      "title": "Rihanna - Stay ft. Mikky Ekko (Karaoke Version)",
+      "uploader": "Sing King",
+      "duration": 256,
+      "thumbnail": "https://i.ytimg.com/vi/bhGqtMsp0-w/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCgegdACffTkqEw1c8MlrCbv7sPJA",
+      "webpageUrl": "https://www.youtube.com/watch?v=bhGqtMsp0-w",
+      "source": "youtube"
+    },
+    {
+      "id": "C-dW7z0QBNg",
+      "title": "Rihanna - Stay (Live on SNL) ft. Mikky Ekko",
+      "uploader": "Rihanna",
+      "duration": 258,
+      "thumbnail": "https://i.ytimg.com/vi/C-dW7z0QBNg/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDAbjPTzMZEcvYSXS7wLB5PJDflIQ",
+      "webpageUrl": "https://www.youtube.com/watch?v=C-dW7z0QBNg",
+      "source": "youtube"
+    },
+    {
+      "id": "fE-L6XcEXMg",
+      "title": "Rihanna - Stay Live at The Concert For Valor 2014",
+      "uploader": "Diana Martins",
+      "duration": 270,
+      "thumbnail": "https://i.ytimg.com/vi/fE-L6XcEXMg/hq720.jpg?sqp=-oaymwE2CNAFEJQDSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgB_gmAAtAFigIMCAAQARhyIEUoOTAP&rs=AOn4CLAwwQbIplAUUw4tASJiMk6sgmp0YA",
+      "webpageUrl": "https://www.youtube.com/watch?v=fE-L6XcEXMg",
+      "source": "youtube"
+    },
+    {
+      "id": "7aVS-6m_lDQ",
+      "title": "Rihanna - Stay (Audio) ft. Mikky Ekko",
+      "uploader": "Juan Marquez",
+      "duration": 242,
+      "thumbnail": "https://i.ytimg.com/vi/7aVS-6m_lDQ/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDQAtiB5rq3jKpyOF4NJ8bhhS7n8Q",
+      "webpageUrl": "https://www.youtube.com/watch?v=7aVS-6m_lDQ",
       "source": "youtube"
     }
   ]
