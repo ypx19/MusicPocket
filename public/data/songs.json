@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-20T22:19:25.486114+00:00",
+  "updatedAt": "2026-09-20T22:21:54.381605+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -185,6 +185,18 @@
       "duration": 145,
       "coverUrl": "covers/track-d3d970098e.jpg",
       "lyricsUrl": "lyrics/track-d3d970098e.lrc"
+    },
+    {
+      "id": "track-141e21cd46",
+      "title": "小宇",
+      "artist": "张震岳",
+      "audioUrl": "music/track-141e21cd46.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=6bi587lgWhM",
+      "sourceName": "youtube",
+      "importedAt": "2026-09-20T22:21:54.381361+00:00",
+      "duration": 224,
+      "coverUrl": "covers/track-141e21cd46.jpg",
+      "lyricsUrl": "lyrics/track-141e21cd46.lrc"
     },
     {
       "id": "track-17178c6bb3",
