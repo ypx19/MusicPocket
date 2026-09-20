@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-16T20:43:57.283406+00:00",
+  "updatedAt": "2026-09-20T22:19:25.486114+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -89,6 +89,18 @@
       "sourceName": "Generated sample",
       "license": "CC0 — synthetic demo tone generated with FFmpeg",
       "importedAt": "2026-07-26T00:00:00.000Z"
+    },
+    {
+      "id": "rihanna-stay-178904ceb7",
+      "title": "Stay",
+      "artist": "Rihanna",
+      "audioUrl": "music/rihanna-stay-178904ceb7.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=JF8BRvqGCNs",
+      "sourceName": "youtube",
+      "importedAt": "2026-09-20T22:19:25.485403+00:00",
+      "duration": 247,
+      "coverUrl": "covers/rihanna-stay-178904ceb7.jpg",
+      "lyricsUrl": "lyrics/rihanna-stay-178904ceb7.lrc"
     },
     {
       "id": "dongyun-fd83653ed8",
