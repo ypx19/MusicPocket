@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T06:28:14.430017+00:00",
+  "updatedAt": "2026-10-01T06:29:54.882503+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -173,6 +173,18 @@
       "duration": 275,
       "coverUrl": "covers/track-267db27f6e.jpg",
       "lyricsUrl": "lyrics/track-267db27f6e.lrc"
+    },
+    {
+      "id": "track-d86506be48",
+      "title": "江湖笑",
+      "artist": "周華健",
+      "audioUrl": "music/track-d86506be48.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=EEuXCuJJHe4",
+      "sourceName": "youtube",
+      "importedAt": "2026-10-01T06:29:54.881637+00:00",
+      "duration": 264,
+      "coverUrl": "covers/track-d86506be48.jpg",
+      "lyricsUrl": "lyrics/track-d86506be48.lrc"
     },
     {
       "id": "track-d3d970098e",
