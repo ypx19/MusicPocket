@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T06:29:54.882503+00:00",
+  "updatedAt": "2026-10-01T06:31:40.481521+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -269,6 +269,18 @@
       "duration": 223,
       "coverUrl": "covers/track-b88366713c.jpg",
       "lyricsUrl": "lyrics/track-b88366713c.lrc"
+    },
+    {
+      "id": "track-ea5c6e6ea0",
+      "title": "滄海一聲笑",
+      "artist": "羅文",
+      "audioUrl": "music/track-ea5c6e6ea0.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=OFFRDtmWeso",
+      "sourceName": "youtube",
+      "importedAt": "2026-10-01T06:31:40.481130+00:00",
+      "duration": 267,
+      "coverUrl": "covers/track-ea5c6e6ea0.jpg",
+      "lyricsUrl": "lyrics/track-ea5c6e6ea0.lrc"
     },
     {
       "id": "track-9cf8eec6be",
