@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-01T06:31:40.481521+00:00",
+  "updatedAt": "2026-10-07T21:44:51.656566+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -197,6 +197,18 @@
       "duration": 145,
       "coverUrl": "covers/track-d3d970098e.jpg",
       "lyricsUrl": "lyrics/track-d3d970098e.lrc"
+    },
+    {
+      "id": "track-d571061bd0",
+      "title": "倩女幽魂",
+      "artist": "张国荣",
+      "audioUrl": "music/track-d571061bd0.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=WSyt2oIiqZ0",
+      "sourceName": "youtube",
+      "importedAt": "2026-10-07T21:44:51.656034+00:00",
+      "duration": 217,
+      "coverUrl": "covers/track-d571061bd0.jpg",
+      "lyricsUrl": "lyrics/track-d571061bd0.lrc"
     },
     {
       "id": "track-141e21cd46",
