@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-07T21:44:51.656566+00:00",
+  "updatedAt": "2026-10-09T04:53:36.103795+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -293,6 +293,18 @@
       "duration": 267,
       "coverUrl": "covers/track-ea5c6e6ea0.jpg",
       "lyricsUrl": "lyrics/track-ea5c6e6ea0.lrc"
+    },
+    {
+      "id": "track-5099f7da26",
+      "title": "清明雨上",
+      "artist": "许嵩",
+      "audioUrl": "music/track-5099f7da26.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=pOkpVo69DvU",
+      "sourceName": "youtube",
+      "importedAt": "2026-10-09T04:53:36.103223+00:00",
+      "duration": 219,
+      "coverUrl": "covers/track-5099f7da26.jpg",
+      "lyricsUrl": "lyrics/track-5099f7da26.lrc"
     },
     {
       "id": "track-9cf8eec6be",
