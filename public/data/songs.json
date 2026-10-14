@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-14T07:18:27.807868+00:00",
+  "updatedAt": "2026-10-14T07:19:38.148256+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -293,6 +293,18 @@
       "duration": 223,
       "coverUrl": "covers/track-b88366713c.jpg",
       "lyricsUrl": "lyrics/track-b88366713c.lrc"
+    },
+    {
+      "id": "track-9df5b950c3",
+      "title": "亡命之徒",
+      "artist": "縱貫線",
+      "audioUrl": "music/track-9df5b950c3.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=URXLGoKcg9M",
+      "sourceName": "youtube",
+      "importedAt": "2026-10-14T07:19:38.147845+00:00",
+      "duration": 368,
+      "coverUrl": "covers/track-9df5b950c3.jpg",
+      "lyricsUrl": "lyrics/track-9df5b950c3.lrc"
     },
     {
       "id": "track-ea5c6e6ea0",
