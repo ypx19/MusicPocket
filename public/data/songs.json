@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-14T07:19:38.148256+00:00",
+  "updatedAt": "2026-10-17T03:15:02.350041+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -377,6 +377,18 @@
       "duration": 220,
       "coverUrl": "covers/track-3c72d76d11.jpg",
       "lyricsUrl": "lyrics/track-3c72d76d11.lrc"
+    },
+    {
+      "id": "track-19414b8755",
+      "title": "無法長大",
+      "artist": "趙雷",
+      "audioUrl": "music/track-19414b8755.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=J8LvxR-W5HI",
+      "sourceName": "youtube",
+      "importedAt": "2026-10-17T03:15:02.349184+00:00",
+      "duration": 287,
+      "coverUrl": "covers/track-19414b8755.jpg",
+      "lyricsUrl": "lyrics/track-19414b8755.lrc"
     },
     {
       "id": "track-3d363cafa9",
