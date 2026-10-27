@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-25T21:01:59.454394+00:00",
+  "updatedAt": "2026-10-27T23:11:22.759554+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -245,6 +245,18 @@
       "duration": 278,
       "coverUrl": "covers/track-fa284415c6.jpg",
       "lyricsUrl": "lyrics/track-fa284415c6.lrc"
+    },
+    {
+      "id": "track-c99bc95f88",
+      "title": "茶香白云飘",
+      "artist": "杨青",
+      "audioUrl": "music/track-c99bc95f88.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=5sNUMo-WYIg",
+      "sourceName": "youtube",
+      "importedAt": "2026-10-27T23:11:22.758588+00:00",
+      "duration": 324,
+      "coverUrl": "covers/track-c99bc95f88.jpg",
+      "lyricsUrl": "lyrics/track-c99bc95f88.lrc"
     },
     {
       "id": "track-de0d582738",
