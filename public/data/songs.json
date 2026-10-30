@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-27T23:18:44.206944+00:00",
+  "updatedAt": "2026-10-30T05:10:53.021700+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -233,6 +233,18 @@
       "duration": 224,
       "coverUrl": "covers/track-141e21cd46.jpg",
       "lyricsUrl": "lyrics/track-141e21cd46.lrc"
+    },
+    {
+      "id": "track-d005ea3b4e",
+      "title": "水流众生",
+      "artist": "李健",
+      "audioUrl": "music/track-d005ea3b4e.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=NZRcGatBLgM",
+      "sourceName": "youtube",
+      "importedAt": "2026-10-30T05:10:53.020767+00:00",
+      "duration": 280,
+      "coverUrl": "covers/track-d005ea3b4e.jpg",
+      "lyricsUrl": "lyrics/track-d005ea3b4e.lrc"
     },
     {
       "id": "track-17178c6bb3",
