@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-30T05:10:53.021700+00:00",
+  "updatedAt": "2026-11-08T04:39:04.981967+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -425,6 +425,18 @@
       "duration": 220,
       "coverUrl": "covers/track-3c72d76d11.jpg",
       "lyricsUrl": "lyrics/track-3c72d76d11.lrc"
+    },
+    {
+      "id": "track-938f62974f",
+      "title": "八十年代的歌",
+      "artist": "趙雷",
+      "audioUrl": "music/track-938f62974f.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=C3lue02o_aw",
+      "sourceName": "youtube",
+      "importedAt": "2026-11-08T04:39:04.980960+00:00",
+      "duration": 271,
+      "coverUrl": "covers/track-938f62974f.jpg",
+      "lyricsUrl": "lyrics/track-938f62974f.lrc"
     },
     {
       "id": "track-19414b8755",
