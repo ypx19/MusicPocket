@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-08T04:39:04.981967+00:00",
+  "updatedAt": "2026-11-10T03:45:46.010431+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -461,6 +461,18 @@
       "duration": 362,
       "coverUrl": "covers/track-d7f62c8b97.jpg",
       "lyricsUrl": "lyrics/track-d7f62c8b97.lrc"
+    },
+    {
+      "id": "track-bc3b007d8c",
+      "title": "我的快乐时代",
+      "artist": "陈奕迅",
+      "audioUrl": "music/track-bc3b007d8c.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=Q7tnLVn93FA",
+      "sourceName": "youtube",
+      "importedAt": "2026-11-10T03:45:46.009594+00:00",
+      "duration": 216,
+      "coverUrl": "covers/track-bc3b007d8c.jpg",
+      "lyricsUrl": "lyrics/track-bc3b007d8c.lrc"
     },
     {
       "id": "track-3d363cafa9",
