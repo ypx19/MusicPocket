@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-10T03:45:46.010431+00:00",
+  "updatedAt": "2026-11-10T03:46:46.619674+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -473,6 +473,18 @@
       "duration": 216,
       "coverUrl": "covers/track-bc3b007d8c.jpg",
       "lyricsUrl": "lyrics/track-bc3b007d8c.lrc"
+    },
+    {
+      "id": "track-9fa6c1decc",
+      "title": "落花流水",
+      "artist": "陈奕迅",
+      "audioUrl": "music/track-9fa6c1decc.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=FF_35jGO53I",
+      "sourceName": "youtube",
+      "importedAt": "2026-11-10T03:46:46.619077+00:00",
+      "duration": 237,
+      "coverUrl": "covers/track-9fa6c1decc.jpg",
+      "lyricsUrl": "lyrics/track-9fa6c1decc.lrc"
     },
     {
       "id": "track-3d363cafa9",
