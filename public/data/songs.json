@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-10T03:46:46.619674+00:00",
+  "updatedAt": "2026-11-22T04:23:10.802673+00:00",
   "songs": [
     {
       "id": "badfinger-baby-blue-d2b7f1be83",
@@ -365,6 +365,18 @@
       "duration": 267,
       "coverUrl": "covers/track-ea5c6e6ea0.jpg",
       "lyricsUrl": "lyrics/track-ea5c6e6ea0.lrc"
+    },
+    {
+      "id": "track-c7cbecc992",
+      "title": "如果當時",
+      "artist": "許嵩",
+      "audioUrl": "music/track-c7cbecc992.mp3",
+      "sourceUrl": "https://www.youtube.com/watch?v=2QlJO8u1mcc",
+      "sourceName": "youtube",
+      "importedAt": "2026-11-22T04:23:10.801935+00:00",
+      "duration": 314,
+      "coverUrl": "covers/track-c7cbecc992.jpg",
+      "lyricsUrl": "lyrics/track-c7cbecc992.lrc"
     },
     {
       "id": "track-5099f7da26",
